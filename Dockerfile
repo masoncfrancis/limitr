@@ -5,9 +5,9 @@ FROM golang:1.22.3-alpine3.20
 WORKDIR /app
 
 # Copy the source code
-COPY ..
+COPY . .
 
-RUN go build ./cmd/limit -o ./limit
+RUN go build ./cmd/limit
 
 # Specify the command to run your binary
 CMD ["./limit"]
