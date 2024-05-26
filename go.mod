@@ -1,3 +1,3 @@
-module limit
+module github.com/masoncfrancis/limit
 
-go 1.22
+go 1.22.3
