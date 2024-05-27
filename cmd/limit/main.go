@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
