@@ -16,7 +16,7 @@ func main() {
 	// Set up a route to handle incoming requests
 	app.All("/*", func(c *fiber.Ctx) error {
 		// Create a new HTTP request to forward the incoming request
-		req, err := http.NewRequest(c.Method(), "https://webhook.site/579e27f0-7918-459f-9bec-21fd5e8b844c", io.NopCloser(bytes.NewReader(c.Body())))
+		req, err := http.NewRequest(c.Method(), "https://www.google.com", io.NopCloser(bytes.NewReader(c.Body())))
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
