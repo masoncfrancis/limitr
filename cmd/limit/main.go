@@ -2,17 +2,17 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, World!")
+	app := fiber.New()
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Hello, World! This was served with Go Fiber")
 	})
 
-	fmt.Println("Server starting on port 7654...")
-	if err := http.ListenAndServe(":7654", nil); err != nil {
-		panic(err)
-	}
+	fmt.Println("Starting server at port 7654...")
+
+	app.Listen(":7654")
 }
