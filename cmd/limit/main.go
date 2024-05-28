@@ -9,7 +9,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"strconv"
 )
 
 func makeRequest(method, url string, body []byte, headers http.Header) ([]byte, int, http.Header, error) {
@@ -32,7 +31,12 @@ func makeRequest(method, url string, body []byte, headers http.Header) ([]byte, 
 	if err != nil {
 		return nil, 0, nil, err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+
+		}
+	}(resp.Body)
 
 	// Copy response headers
 	respHeaders := make(http.Header)
@@ -59,36 +63,6 @@ func convertHeader(fasthttpHeader *fasthttp.RequestHeader) http.Header {
 	})
 
 	return header
-}
-
-func getAndIncrementIPValue(rdb *redis.Client, ip string, dbCtx context.Context) (int, error) {
-	// Get the current value
-	val, err := rdb.Get(dbCtx, ip).Result()
-	if err != nil {
-		if err == redis.Nil {
-			// Key does not exist, set initial value to 0
-			if err := rdb.Set(dbCtx, ip, 0, 0).Err(); err != nil {
-				return 0, err
-			}
-			val = "0"
-		} else {
-			return 0, err
-		}
-	}
-
-	// Convert the value to an integer
-	currentValue, err := strconv.Atoi(val)
-	if err != nil {
-		return 0, err
-	}
-
-	// Increment the value in Redis
-	if err := rdb.Incr(dbCtx, ip).Err(); err != nil {
-		return 0, err
-	}
-
-	// Return the original value
-	return currentValue, nil
 }
 
 func main() {
