@@ -2,12 +2,61 @@ package main
 
 import (
 	"bytes"
+	"github.com/gofiber/fiber/v2"
+	"github.com/valyala/fasthttp"
 	"io"
 	"log"
 	"net/http"
-
-	"github.com/gofiber/fiber/v2"
 )
+
+func makeRequest(method, url string, body []byte, headers http.Header) ([]byte, int, http.Header, error) {
+	// Create a new HTTP request to forward the incoming request
+	req, err := http.NewRequest(method, url, io.NopCloser(bytes.NewReader(body)))
+	if err != nil {
+		return nil, 0, nil, err
+	}
+
+	// Copy headers from the original request
+	for key, values := range headers {
+		for _, value := range values {
+			req.Header.Set(key, value)
+		}
+	}
+
+	// Perform the request
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, 0, nil, err
+	}
+	defer resp.Body.Close()
+
+	// Copy response headers
+	respHeaders := make(http.Header)
+	for key, values := range resp.Header {
+		for _, value := range values {
+			respHeaders.Set(key, value)
+		}
+	}
+
+	// Copy response body
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, 0, nil, err
+	}
+
+	return respBody, resp.StatusCode, respHeaders, nil
+}
+
+func convertHeader(fasthttpHeader *fasthttp.RequestHeader) http.Header {
+	header := make(http.Header)
+
+	fasthttpHeader.VisitAll(func(key, value []byte) {
+		header.Set(string(key), string(value))
+	})
+
+	return header
+}
 
 func main() {
 	// Create a new Fiber instance
@@ -15,41 +64,22 @@ func main() {
 
 	// Set up a route to handle incoming requests
 	app.All("/*", func(c *fiber.Ctx) error {
-		// Create a new HTTP request to forward the incoming request
-		req, err := http.NewRequest(c.Method(), "https://www.google.com", io.NopCloser(bytes.NewReader(c.Body())))
+		body, statusCode, headers, err := makeRequest(c.Method(), "https://www.google.com", c.Body(), convertHeader(&c.Request().Header))
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
 
-		// Copy headers from the original request
-		c.Request().Header.VisitAll(func(key, value []byte) {
-			req.Header.Set(string(key), string(value))
-		})
-
-		// Perform the request
-		client := &http.Client{}
-		resp, err := client.Do(req)
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
-		}
-		defer resp.Body.Close()
-
-		// Copy response headers
-		for key, values := range resp.Header {
+		// Set response headers
+		for key, values := range headers {
 			for _, value := range values {
 				c.Set(key, value)
 			}
 		}
 
-		// Copy response status code
-		c.Status(resp.StatusCode)
+		// Set response status code
+		c.Status(statusCode)
 
-		// Copy response body
-		body, err := io.ReadAll(resp.Body)
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
-		}
-
+		// Send response body
 		return c.Send(body)
 	})
 
