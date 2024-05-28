@@ -65,6 +65,8 @@ func convertHeader(fasthttpHeader *fasthttp.RequestHeader) http.Header {
 
 func main() {
 
+	// TODO add descriptions for all functions
+
 	// TODO implement loading environment variables
 
 	// Create a new Redis client
