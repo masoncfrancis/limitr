@@ -1,4 +1,4 @@
-package ipquery
+package database
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func getAndIncrementIPValue(rdb *redis.Client, ip string, dbCtx context.Context) (int, error) {
+func GetAndIncrementIPValue(rdb *redis.Client, ip string, dbCtx context.Context) (int, error) {
 	// Get the current value
 	val, err := rdb.Get(dbCtx, ip).Result()
 	if err != nil {

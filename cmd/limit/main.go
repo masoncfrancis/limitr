@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"context"
 	"github.com/gofiber/fiber/v2"
+	"github.com/masoncfrancis/limit/internal/database"
 	"github.com/redis/go-redis/v9"
 	"github.com/valyala/fasthttp"
 	"io"
-	"log"
 	"net/http"
 )
 
@@ -83,7 +83,7 @@ func main() {
 
 		// Check IP address for previous requests
 		ip := c.IP()
-		currentValue, err := getAndIncrementIPValue(rdb, ip, dbCtx)
+		currentValue, err := database.GetAndIncrementIPValue(rdb, ip, dbCtx)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
@@ -108,5 +108,5 @@ func main() {
 	})
 
 	// Start the server on port 7654
-	log.Fatal(app.Listen(":7654"))
+	app.Listen(":7654")
 }

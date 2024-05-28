@@ -1,4 +1,4 @@
-package envvars
+package config
 
 import (
 	"github.com/joho/godotenv"
@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func setupEnvVars() {
+func SetupEnvVars() {
 	// Load environment variables
 	err := godotenv.Load()
 	if err != nil {
@@ -17,7 +17,7 @@ func setupEnvVars() {
 
 }
 
-func checkEnvVar(varName string) bool {
+func CheckEnvVar(varName string) bool {
 	_, exists := os.LookupEnv(varName)
 	if !exists {
 		return true
