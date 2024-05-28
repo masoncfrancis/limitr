@@ -1,3 +1,3 @@
 # Limit
 
-A lightweight rate limiter written in Go
+A HTTP request rate limiter written in Go
