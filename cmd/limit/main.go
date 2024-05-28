@@ -65,6 +65,8 @@ func convertHeader(fasthttpHeader *fasthttp.RequestHeader) http.Header {
 
 func main() {
 
+	// TODO implement loading environment variables
+
 	// Create a new Redis client
 	dbCtx, rdb := database.CreateDbConn()
 
@@ -80,6 +82,13 @@ func main() {
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
+
+		// If the IP address has made more than 10 requests, return HTTP code 429
+		if currentValue > 10 {
+			return c.Status(fiber.StatusTooManyRequests).SendString("Too many requests")
+		}
+
+		// TODO implement getting rate limit from env vars
 
 		body, statusCode, headers, err := makeRequest(c.Method(), "https://www.google.com", c.Body(), convertHeader(&c.Request().Header))
 		if err != nil {
