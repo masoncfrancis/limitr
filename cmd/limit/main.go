@@ -91,6 +91,7 @@ func main() {
 			return c.Status(fiber.StatusTooManyRequests).SendString("Too many requests")
 		}
 
+		// TODO test rate limiting with env variables
 		// TODO implement time window
 
 		body, statusCode, headers, err := makeRequest(c.Method(), "https://www.google.com", c.Body(), convertHeader(&c.Request().Header))
