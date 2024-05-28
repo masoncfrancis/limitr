@@ -2,10 +2,8 @@ package main
 
 import (
 	"bytes"
-	"context"
 	"github.com/gofiber/fiber/v2"
 	"github.com/masoncfrancis/limit/internal/database"
-	"github.com/redis/go-redis/v9"
 	"github.com/valyala/fasthttp"
 	"io"
 	"net/http"
@@ -67,13 +65,8 @@ func convertHeader(fasthttpHeader *fasthttp.RequestHeader) http.Header {
 
 func main() {
 
-	dbCtx := context.Background()
-
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       0,
-	})
+	// Create a new Redis client
+	dbCtx, rdb := database.CreateDbConn()
 
 	// Create a new Fiber instance
 	app := fiber.New()
