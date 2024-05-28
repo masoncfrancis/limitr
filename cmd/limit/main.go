@@ -68,7 +68,7 @@ func main() {
 
 	// TODO add descriptions for all functions
 
-	config.SetupEnvVars()
+	config.SetupEnvVars() // Load environment variables
 
 	// Create a new Redis client
 	dbCtx, rdb := database.CreateDbConn()
@@ -86,12 +86,12 @@ func main() {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
 
-		// If the IP address has made more than 10 requests, return HTTP code 429
-		if currentValue > 10 {
+		// If the IP address has made more requests than allowed, return HTTP code 429
+		if currentValue > config.GetRateLimit() {
 			return c.Status(fiber.StatusTooManyRequests).SendString("Too many requests")
 		}
 
-		// TODO implement getting rate limit from env vars
+		// TODO implement time window
 
 		body, statusCode, headers, err := makeRequest(c.Method(), "https://www.google.com", c.Body(), convertHeader(&c.Request().Header))
 		if err != nil {
