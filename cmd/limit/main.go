@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"github.com/gofiber/fiber/v2"
+	"github.com/masoncfrancis/limit/internal/config"
 	"github.com/masoncfrancis/limit/internal/database"
 	"github.com/valyala/fasthttp"
 	"io"
@@ -67,7 +68,7 @@ func main() {
 
 	// TODO add descriptions for all functions
 
-	// TODO implement loading environment variables
+	config.SetupEnvVars()
 
 	// Create a new Redis client
 	dbCtx, rdb := database.CreateDbConn()
