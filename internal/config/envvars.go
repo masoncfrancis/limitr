@@ -90,6 +90,7 @@ func SetupEnvVars() {
 			fmt.Println("Error setting default value for REDIS_PASSWORD")
 		}
 	}
+	// TODO implement ability to change redis db number
 	if !CheckEnvVar("USE_TLS") {
 		fmt.Println("USE_TLS environment variable is not set, using default (false)")
 		err := os.Setenv("USE_TLS", "false")
