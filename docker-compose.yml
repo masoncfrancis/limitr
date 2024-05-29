@@ -1,0 +1,22 @@
+services:
+  limit:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "7654:7654" # Expose the port your application is running on
+    volumes:
+      - ./ssl:/ssl # Replace with your actual paths
+    environment: # Define the environment variables your application needs
+      - FORWARD_URL=https://www.beehive.net
+      - REDIS_ADDR=redis:6379
+      - RATE_LIMIT=50
+      - TIME_WINDOW=120
+    depends_on:
+      - redis
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis-data:/data
