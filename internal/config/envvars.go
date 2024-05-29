@@ -32,6 +32,27 @@ func SetupEnvVars() {
 		log.Fatal("TIME_WINDOW environment variable is not set")
 		errorHappened = true
 	}
+	if !CheckEnvVar("REDIS_ADDR") {
+		log.Println("REDIS_ADDR environment variable is not set, using default (localhost) ")
+		err := os.Setenv("REDIS_ADDR", "localhost")
+		if err != nil {
+			log.Fatal("Error setting default value for REDIS_ADDR")
+		}
+	}
+	if !CheckEnvVar("REDIS_PORT") {
+		log.Println("REDIS_PORT environment variable is not set, using default 6379")
+		err := os.Setenv("REDIS_PORT", "6379")
+		if err != nil {
+			log.Fatal("Error setting default value for REDIS_PORT")
+		}
+	}
+	if !CheckEnvVar("REDIS_PASSWORD") {
+		log.Println("REDIS_PASSWORD environment variable is not set, using default")
+		err := os.Setenv("REDIS_PASSWORD", "")
+		if err != nil {
+			log.Fatal("Error setting default value for REDIS_PASSWORD")
+		}
+	}
 
 	if errorHappened {
 		log.Println("Exiting due to missing environment variables...")
