@@ -2,11 +2,13 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/masoncfrancis/limit/internal/config"
 	"github.com/masoncfrancis/limit/internal/database"
 	"github.com/valyala/fasthttp"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -74,14 +76,17 @@ func main() {
 	dbCtx, rdb := database.CreateDbConn()
 
 	// Create a new Fiber instance
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		DisableStartupMessage: true,
+		AppName:               "limit",
+	})
 
 	// Set up a route to handle incoming requests
 	app.All("/*", func(c *fiber.Ctx) error {
 
 		// Check IP address for previous requests
 		ip := c.IP()
-		currentValue, err := database.GetAndIncrementIPValue(rdb, ip, dbCtx)
+		currentValue, err := database.GetAndIncrementIPValue(rdb, ip, dbCtx, 20)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
@@ -94,7 +99,7 @@ func main() {
 		// TODO test rate limiting with env variables
 		// TODO implement time window
 
-		body, statusCode, headers, err := makeRequest(c.Method(), "https://www.google.com", c.Body(), convertHeader(&c.Request().Header))
+		body, statusCode, headers, err := makeRequest(c.Method(), config.GetForwardUrl()+c.Path(), c.Body(), convertHeader(&c.Request().Header))
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
@@ -114,5 +119,9 @@ func main() {
 	})
 
 	// Start the server on port 7654
-	app.Listen(":7654")
+	fmt.Println("Server running on port 7654...")
+	err := app.Listen(":" + config.GetPort())
+	if err != nil {
+		log.Fatalf("Error starting server: %v", err)
+	}
 }
