@@ -86,7 +86,7 @@ func main() {
 
 		// Check IP address for previous requests
 		ip := c.IP()
-		currentValue, err := database.GetAndIncrementIPValue(rdb, ip, dbCtx, config.GetTimeWindow())
+		currentValue, err := database.GetAndIncrementIPValue(rdb, ip, dbCtx, config.GetTimeWindow(), config.GetRateLimit())
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
