@@ -11,8 +11,11 @@ func SetupEnvVars() {
 	// Load environment variables
 	err := godotenv.Load()
 	if err != nil {
-		log.Println("Error loading .env file")
+		log.Println("No .env file found")
 	}
+
+	// Check if all required environment variables are set
+	// Even if a .env file is missing, the environment variables may still be set
 
 	errorHappened := false
 
