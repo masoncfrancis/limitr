@@ -1,4 +1,4 @@
-# Limit
+# Limitr
 
 A HTTP/HTTPS request rate limiter written in Go
 
