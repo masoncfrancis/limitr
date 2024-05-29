@@ -26,31 +26,61 @@ func SetupEnvVars() {
 		if err != nil {
 			fmt.Println("Error setting default value for PORT")
 		}
+	} else {
+		// Validate port
+		port, err := strconv.Atoi(os.Getenv("PORT"))
+		if err != nil {
+			fmt.Println("Error converting PORT to integer")
+			errorHappened = true
+		} else if port < 1 || port > 65535 {
+			fmt.Println("PORT must be between 1 and 65535")
+			errorHappened = true
+		} else {
+			fmt.Println("PORT is set to " + os.Getenv("PORT"))
+		}
 	}
 	if !CheckEnvVar("FORWARD_URL") {
 		fmt.Println("FORWARD_URL environment variable is not set")
 		errorHappened = true
+	} else {
+		fmt.Println("FORWARD_URL is set to " + os.Getenv("FORWARD_URL"))
 	}
 	if !CheckEnvVar("RATE_LIMIT") {
 		fmt.Println("RATE_LIMIT environment variable is not set")
 		errorHappened = true
+	} else {
+		rateLimit, err := strconv.Atoi(os.Getenv("RATE_LIMIT"))
+		if err != nil {
+			fmt.Println("Error converting RATE_LIMIT to integer")
+			errorHappened = true
+		} else if rateLimit <= 0 {
+			fmt.Println("RATE_LIMIT must be greater than 0")
+			errorHappened = true
+		} else {
+			fmt.Println("RATE_LIMIT is set to " + os.Getenv("RATE_LIMIT"))
+		}
 	}
 	if !CheckEnvVar("TIME_WINDOW") {
 		fmt.Println("TIME_WINDOW environment variable is not set")
 		errorHappened = true
+	} else {
+		timeWindow, err := strconv.Atoi(os.Getenv("TIME_WINDOW"))
+		if err != nil {
+			fmt.Println("Error converting TIME_WINDOW to integer")
+			errorHappened = true
+		} else if timeWindow <= 0 {
+			fmt.Println("TIME_WINDOW must be greater than 0")
+			errorHappened = true
+		} else {
+			fmt.Println("TIME_WINDOW is set to " + os.Getenv("TIME_WINDOW"))
+		}
+
 	}
 	if !CheckEnvVar("REDIS_ADDR") {
 		fmt.Println("REDIS_ADDR environment variable is not set, using default (localhost) ")
 		err := os.Setenv("REDIS_ADDR", "localhost")
 		if err != nil {
 			fmt.Println("Error setting default value for REDIS_ADDR")
-		}
-	}
-	if !CheckEnvVar("REDIS_PORT") {
-		fmt.Println("REDIS_PORT environment variable is not set, using default (6379)")
-		err := os.Setenv("REDIS_PORT", "6379")
-		if err != nil {
-			fmt.Println("Error setting default value for REDIS_PORT")
 		}
 	}
 	if !CheckEnvVar("REDIS_PASSWORD") {
@@ -96,10 +126,6 @@ func GetPort() string {
 
 func GetRedisAddr() string {
 	return os.Getenv("REDIS_ADDR")
-}
-
-func GetRedisPort() string {
-	return os.Getenv("REDIS_PORT")
 }
 
 func GetRedisPassword() string {
