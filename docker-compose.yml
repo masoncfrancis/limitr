@@ -1,0 +1,26 @@
+services:
+  limit:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "7654:7654" # Expose the port your application is running on
+    volumes:
+      - ./ssl:/ssl # Replace with your actual paths
+    environment: # Define the environment variables your application needs
+      - FORWARD_URL=your_forward_url
+      - PORT=7654
+      - REDIS_ADDR=your_redis_address
+      - REDIS_PORT=your_redis_port
+      - REDIS_PASSWORD=your_redis_password
+      - USE_TLS=your_tls_usage
+      - RATE_LIMIT=your_rate_limit
+      - TIME_WINDOW=your_time_window
+    depends_on:
+      - redis
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis-data:/data

@@ -11,7 +11,7 @@ func SetupEnvVars() {
 	// Load environment variables
 	err := godotenv.Load()
 	if err != nil {
-		fmt.Println("No .env file found")
+		fmt.Println("No .env file found, checking environment variables...")
 	}
 
 	// Check if all required environment variables are set
@@ -60,6 +60,13 @@ func SetupEnvVars() {
 			fmt.Println("Error setting default value for REDIS_PASSWORD")
 		}
 	}
+	if !CheckEnvVar("USE_TLS") {
+		fmt.Println("USE_TLS environment variable is not set, using default (false)")
+		err := os.Setenv("USE_TLS", "false")
+		if err != nil {
+			fmt.Println("Error setting default value for USE_TLS")
+		}
+	}
 
 	if errorHappened {
 		fmt.Println("Exiting due to missing environment variables...")
@@ -97,6 +104,15 @@ func GetRedisPort() string {
 
 func GetRedisPassword() string {
 	return os.Getenv("REDIS_PASSWORD")
+}
+
+func GetUseTls() bool {
+	useTls, err := strconv.ParseBool(os.Getenv("USE_TLS"))
+	if err != nil {
+		fmt.Println("Error converting USE_TLS to boolean")
+	}
+	return useTls
+
 }
 
 func GetRateLimit() int {

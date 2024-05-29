@@ -2,3 +2,5 @@
 /.vscode
 /.idea
 .gitignore
+/redis-data
+/ssl
