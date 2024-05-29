@@ -75,6 +75,8 @@ func main() {
 	// Create a new Redis client
 	dbCtx, rdb := database.CreateDbConn()
 
+	// TODO refactor Go Fiber stuff into it's own file
+
 	// Create a new Fiber instance
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
@@ -95,9 +97,6 @@ func main() {
 		if shouldRestrict {
 			return c.Status(fiber.StatusTooManyRequests).SendString("Too many requests")
 		}
-
-		// TODO test rate limiting with env variables
-		// TODO implement time window
 
 		body, statusCode, headers, err := makeRequest(c.Method(), config.GetForwardUrl()+c.Path(), c.Body(), convertHeader(&c.Request().Header))
 		if err != nil {
