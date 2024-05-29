@@ -64,9 +64,9 @@ func SetupEnvVars() {
 func CheckEnvVar(varName string) bool {
 	_, exists := os.LookupEnv(varName)
 	if exists {
-		return true
+		return true // Environment variable is set
 	} else {
-		return false
+		return false // Environment variable is not set
 	}
 }
 
