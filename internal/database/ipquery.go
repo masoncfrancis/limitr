@@ -31,5 +31,11 @@ func CheckIp(rdb *redis.Client, ip string, dbCtx context.Context, timeWindow int
 		return false, err
 	}
 
+	// Remove any requests that are outside the time window
+	_, err = rdb.ZRemRangeByScore(dbCtx, ip, "-inf", strconv.FormatInt(startTime, 10)).Result()
+	if err != nil {
+		return false, err
+	}
+
 	return false, nil
 }
