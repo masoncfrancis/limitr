@@ -2,37 +2,34 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"github.com/redis/go-redis/v9"
 	"strconv"
 	"time"
 )
 
-func GetAndIncrementIPValue(rdb *redis.Client, ip string, dbCtx context.Context, timeWindow int, rateLimit int) (int, error) {
-	// Get the current timestamp
+func CheckIp(rdb *redis.Client, ip string, dbCtx context.Context, timeWindow int, rateLimit int) (bool, error) {
+	// Get the current time
 	now := time.Now().Unix()
 
-	// Add the new request with the current timestamp
-	if _, err := rdb.ZAdd(dbCtx, ip, redis.Z{Score: float64(now), Member: now}).Result(); err != nil {
-		return 0, err
-	}
+	// Get the start time for the time window
+	startTime := now - int64(timeWindow)
 
-	// Remove all requests older than the time window
-	if _, err := rdb.ZRemRangeByScore(dbCtx, ip, "0", strconv.FormatInt(now-int64(timeWindow), 10)).Result(); err != nil {
-		return 0, err
-	}
-
-	// Get the count of requests in the last time window
-	count, err := rdb.ZCount(dbCtx, ip, strconv.FormatInt(now-int64(timeWindow), 10), strconv.FormatInt(now, 10)).Result()
+	// Get the number of requests made by the IP
+	count, err := rdb.ZCount(dbCtx, ip, strconv.FormatInt(startTime, 10), strconv.FormatInt(now, 10)).Result()
 	if err != nil {
-		return 0, err
+		return false, err
 	}
 
-	// Check if the count exceeds the rate limit
-	if int(count) > rateLimit {
-		return 0, fmt.Errorf("rate limit exceeded")
+	// If the number of requests is greater than the rate limit, return true
+	if count >= int64(rateLimit) {
+		return true, nil
 	}
 
-	// Return the count
-	return int(count), nil
+	// Add the current request to the sorted set with the time window for the expiration time
+	_, err = rdb.ZAdd(dbCtx, ip, redis.Z{Score: float64(now), Member: strconv.FormatInt(now, 10)}).Result()
+	if err != nil {
+		return false, err
+	}
+
+	return false, nil
 }

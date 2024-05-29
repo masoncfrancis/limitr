@@ -86,13 +86,13 @@ func main() {
 
 		// Check IP address for previous requests
 		ip := c.IP()
-		currentValue, err := database.GetAndIncrementIPValue(rdb, ip, dbCtx, config.GetTimeWindow(), config.GetRateLimit())
+		shouldRestrict, err := database.CheckIp(rdb, ip, dbCtx, config.GetTimeWindow(), config.GetRateLimit())
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
 
 		// If the IP address has made more requests than allowed, return HTTP code 429
-		if currentValue > config.GetRateLimit() {
+		if shouldRestrict {
 			return c.Status(fiber.StatusTooManyRequests).SendString("Too many requests")
 		}
 

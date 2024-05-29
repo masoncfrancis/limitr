@@ -77,8 +77,8 @@ func SetupEnvVars() {
 
 	}
 	if !CheckEnvVar("REDIS_ADDR") {
-		fmt.Println("REDIS_ADDR environment variable is not set, using default (localhost) ")
-		err := os.Setenv("REDIS_ADDR", "localhost")
+		fmt.Println("REDIS_ADDR environment variable is not set, using default (localhost:6379) ")
+		err := os.Setenv("REDIS_ADDR", "localhost:6379")
 		if err != nil {
 			fmt.Println("Error setting default value for REDIS_ADDR")
 		}
@@ -99,7 +99,7 @@ func SetupEnvVars() {
 	}
 
 	if errorHappened {
-		fmt.Println("Exiting due to missing environment variables...")
+		fmt.Println("Exiting due to missing or improperly set environment variables...")
 		os.Exit(1)
 	}
 
