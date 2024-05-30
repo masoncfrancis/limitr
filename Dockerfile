@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy the source code
 COPY . .
 
-RUN go build ./cmd/limit
+RUN go build ./cmd/limitr
 
 # Specify the command to run your binary
-CMD ["./limit"]
+CMD ["./limitr"]
