@@ -3,9 +3,9 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"github.com/BeehiveBroadband/limitr/internal/config"
+	"github.com/BeehiveBroadband/limitr/internal/database"
 	"github.com/gofiber/fiber/v2"
-	"github.com/masoncfrancis/limit/internal/config"
-	"github.com/masoncfrancis/limit/internal/database"
 	"github.com/valyala/fasthttp"
 	"io"
 	"log"

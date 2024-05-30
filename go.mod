@@ -1,4 +1,4 @@
-module github.com/masoncfrancis/limit
+module github.com/BeehiveBroadband/limitr
 
 go 1.22.3
 

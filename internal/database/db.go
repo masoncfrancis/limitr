@@ -2,7 +2,7 @@ package database
 
 import (
 	"context"
-	"github.com/masoncfrancis/limit/internal/config"
+	"github.com/BeehiveBroadband/limitr/internal/config"
 	"github.com/redis/go-redis/v9"
 )
 
