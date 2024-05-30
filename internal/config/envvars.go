@@ -7,8 +7,6 @@ import (
 	"strconv"
 )
 
-// TODO point out in printout if a variable is required
-
 func SetupEnvVars() {
 	// Load environment variables
 	err := godotenv.Load()
@@ -92,7 +90,26 @@ func SetupEnvVars() {
 			fmt.Println("Error setting default value for REDIS_PASSWORD")
 		}
 	}
-	// TODO implement ability to change redis db number
+
+	if !CheckEnvVar("REDIS_DB") {
+		fmt.Println("REDIS_DB environment variable is not set, using default (0)")
+		err := os.Setenv("REDIS_DB", "0")
+		if err != nil {
+			fmt.Println("Error setting default value for REDIS_DB")
+		}
+	} else {
+		redisDb, err := strconv.Atoi(os.Getenv("REDIS_DB"))
+		if err != nil {
+			fmt.Println("Error converting REDIS_DB to integer")
+			errorHappened = true
+		} else if redisDb < 0 {
+			fmt.Println("REDIS_DB must be greater than or equal to 0")
+			errorHappened = true
+		} else {
+			fmt.Println("REDIS_DB is set to " + os.Getenv("REDIS_DB"))
+		}
+	}
+
 	if !CheckEnvVar("USE_TLS") {
 		fmt.Println("USE_TLS environment variable is not set, using default (false)")
 		err := os.Setenv("USE_TLS", "false")
