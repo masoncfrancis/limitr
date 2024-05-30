@@ -14,6 +14,7 @@ import (
 	"net/http"
 )
 
+// makeRequest makes an HTTP request to the specified URL with the specified method, body, and headers
 func makeRequest(method, url string, body []byte, headers http.Header) ([]byte, int, http.Header, error) {
 	// Create a new HTTP request to forward the incoming request
 	req, err := http.NewRequest(method, url, io.NopCloser(bytes.NewReader(body)))
@@ -58,6 +59,7 @@ func makeRequest(method, url string, body []byte, headers http.Header) ([]byte, 
 	return respBody, resp.StatusCode, respHeaders, nil
 }
 
+// convertHeader converts a fasthttp header to an http header
 func convertHeader(fasthttpHeader *fasthttp.RequestHeader) http.Header {
 	header := make(http.Header)
 
@@ -68,19 +70,7 @@ func convertHeader(fasthttpHeader *fasthttp.RequestHeader) http.Header {
 	return header
 }
 
-func main() {
-
-	// TODO add descriptions for all functions
-
-	config.SetupEnvVars() // Load environment variables
-
-	// Create a new Redis client
-	dbCtx, rdb := database.CreateDbConn()
-
-	setupAndRunServer(rdb, dbCtx)
-
-}
-
+// setupAndRunServer sets up the Fiber server and starts it
 func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 	// Create a new Fiber instance
 	app := fiber.New(fiber.Config{
@@ -139,4 +129,17 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 		}
 		return
 	}
+}
+
+// main is the entry point for the application
+func main() {
+
+	// TODO add descriptions for all functions
+
+	config.SetupEnvVars() // Load environment variables
+
+	// Create a new Redis client
+	dbCtx, rdb := database.CreateDbConn()
+
+	setupAndRunServer(rdb, dbCtx)
 }
