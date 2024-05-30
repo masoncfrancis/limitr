@@ -9,12 +9,12 @@ services:
       - ./ssl:/ssl # Replace the left side with the path to your SSL certificates
     environment: # Define the environment variables, available in the docs
       - FORWARD_URL=https://www.beehive.net
-      - REDIS_ADDR=redis:6379
       - RATE_LIMIT=50
       - TIME_WINDOW=120
+      - REDIS_ADDR=redis:6379 # Don't change this
     depends_on:
       - redis
-  redis: # don't change this part
+  redis: # Don't change anything in this section
     image: redis:latest
     ports:
       - "6379:6379"
