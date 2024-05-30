@@ -42,13 +42,13 @@ func SetupEnvVars() {
 		}
 	}
 	if !CheckEnvVar("FORWARD_URL") {
-		fmt.Println("FORWARD_URL environment variable is not set")
+		fmt.Println("FORWARD_URL environment variable is not set and is required")
 		errorHappened = true
 	} else {
 		fmt.Println("FORWARD_URL is set to " + os.Getenv("FORWARD_URL"))
 	}
 	if !CheckEnvVar("RATE_LIMIT") {
-		fmt.Println("RATE_LIMIT environment variable is not set")
+		fmt.Println("RATE_LIMIT environment variable is not set and is required")
 		errorHappened = true
 	} else {
 		rateLimit, err := strconv.Atoi(os.Getenv("RATE_LIMIT"))
@@ -63,7 +63,7 @@ func SetupEnvVars() {
 		}
 	}
 	if !CheckEnvVar("TIME_WINDOW") {
-		fmt.Println("TIME_WINDOW environment variable is not set")
+		fmt.Println("TIME_WINDOW environment variable is not set and is required")
 		errorHappened = true
 	} else {
 		timeWindow, err := strconv.Atoi(os.Getenv("TIME_WINDOW"))
