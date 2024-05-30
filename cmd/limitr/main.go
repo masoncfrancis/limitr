@@ -2,10 +2,12 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"github.com/BeehiveBroadband/limitr/internal/config"
 	"github.com/BeehiveBroadband/limitr/internal/database"
 	"github.com/gofiber/fiber/v2"
+	"github.com/redis/go-redis/v9"
 	"github.com/valyala/fasthttp"
 	"io"
 	"log"
@@ -75,8 +77,11 @@ func main() {
 	// Create a new Redis client
 	dbCtx, rdb := database.CreateDbConn()
 
-	// TODO refactor Go Fiber stuff into it's own file
+	setupAndRunServer(rdb, dbCtx)
 
+}
+
+func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 	// Create a new Fiber instance
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
@@ -117,7 +122,6 @@ func main() {
 		return c.Send(body)
 	})
 
-	// TODO test the server using TLS
 	if config.GetUseTls() {
 		// Start the server with TLS
 		fmt.Printf("Server running on port %s with TLS...", config.GetPort())
@@ -135,5 +139,4 @@ func main() {
 		}
 		return
 	}
-
 }
