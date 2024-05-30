@@ -7,6 +7,8 @@ import (
 	"strconv"
 )
 
+// TODO point out in printout if a variable is required
+
 func SetupEnvVars() {
 	// Load environment variables
 	err := godotenv.Load()
