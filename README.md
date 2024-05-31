@@ -48,7 +48,7 @@ You can store these variables in a `.env` file in the same directory as the exec
 server will check to see if the variables are otherwise set. Variables stored in .env will take precedence over those
 already set in the environment before running.
 
-**If you are using `docker compose`**, you will need to set these variables in the `docker-compose.yml` file.
+If you are using `docker compose`, you will need to set these variables in the `docker-compose.yml` file.
 
 #### Redis
 
