@@ -33,7 +33,7 @@ The `docker-compose.yml` file in the root of the project contains a Redis servic
 you will need to set up a Redis server yourself. Make sure to set your environment variables appropriately (learn more
 [here](#environment-variables)).
 
-### Running the Server
+### Running Limitr
 
 #### Using Docker Compose
 
