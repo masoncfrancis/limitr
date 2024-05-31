@@ -1,6 +1,25 @@
 # Limitr
 
-A HTTP/HTTPS request rate limiter written in Go
+A HTTP/HTTPS request rate limiter written in Go. 
+
+## About Limitr
+
+Limitr works by forwarding requests to a specified URL and moderating the rate at which requests can be made in accordance
+with a defined number of requests per defined time window. If the rate limit is exceeded, the server will respond with a 
+`429 Too Many Requests` status code.
+
+### Why did I write Limitr?
+
+I had a need for rate limiting a self-hosted API that I was developing, and couldn't find any standalone rate limiters that
+weren't part of some API gateway or reverse proxy. I wanted something that I could run on my server and configure to my
+liking. 
+
+### Technologies used
+
+- [Go](https://golang.org/): The server is written in Go
+- [Go Fiber](https://gofiber.io/): The server uses Go Fiber to handle HTTP requests
+- [Redis](https://redis.io/): The rate limiter uses Redis to store rate limit data
+- [Docker](https://www.docker.com/): The server can be run in a Docker container
 
 ## Getting Started
 
