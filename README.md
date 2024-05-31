@@ -55,8 +55,8 @@ already set in the environment before running.
 The rate limiter uses Redis to store the rate limit data.
 
 The `docker-compose.yml` file in the root of the project contains a Redis service. If you are not using `docker compose`
-you will need to set up a Redis server yourself. Make sure to set your environment variables appropriately (learn more
-[here](#environment-variables)).
+you will need to set up a Redis server yourself. Make sure to set your environment variables appropriately (see the
+[environment variables](#environment-variables) section).
 
 ### Running Limitr
 
