@@ -19,15 +19,15 @@ You can set the following environment variables to configure the rate limiter:
 - `REDIS_PASSWORD` (default: `""`): The password of the Redis server
 - `REDIS_DB` (default: `0`): The database of the Redis server
 
-You can store these variables in a `.env` file in the same directory as the executable. If there is no `.env` file, the 
-server will check to see if the variables are otherwise set. Variables stored in .env will take precedence over those 
+You can store these variables in a `.env` file in the same directory as the executable. If there is no `.env` file, the
+server will check to see if the variables are otherwise set. Variables stored in .env will take precedence over those
 already set in the environment before running.
 
-**If you are using `docker compose`**, you will need to set these variables in the `docker-compose.yml` file. 
+**If you are using `docker compose`**, you will need to set these variables in the `docker-compose.yml` file.
 
 #### Redis
 
-The rate limiter uses Redis to store the rate limit data. 
+The rate limiter uses Redis to store the rate limit data.
 
 The `docker-compose.yml` file in the root of the project contains a Redis service. If you are not using `docker compose`
 you will need to set up a Redis server yourself. Make sure to set your environment variables appropriately (learn more
@@ -55,10 +55,37 @@ This will start the Limitr server and a Redis server. The server will be availab
 #### Using the executable
 
 Releases are available on the [releases page](releases). Download the appropriate release for your system and run the
-executable. 
+executable.
 
 ```shell
 ./[executable name]
+```
+
+The server will be available at `http://localhost:7654` unless you set a different port.
+
+#### Building from source (unstable)
+
+You can build from source if a release isn't available for your system. Please note that you will need to have Go >
+=1.22.3
+installed on your system.
+
+First, clone the repository:
+
+```shell
+git clone https://github.com/BeehiveBroadband/limitr.git
+cd limitr
+```
+
+Then, build the executable:
+
+```shell
+go build ./cmd/limitr
+```
+
+Finally, run the executable:
+
+```shell
+./limitr
 ```
 
 The server will be available at `http://localhost:7654` unless you set a different port.
