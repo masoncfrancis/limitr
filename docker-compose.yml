@@ -5,6 +5,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "7654:7654" # Make sure this is the same port as the one in your application, and make sure to add the port to the environment variable below
+    networks:
+      - containerNetwork
     volumes:
       - ./ssl:/ssl # Replace the left side with the path to your SSL certificates
     environment: # Define the environment variables, available in the docs
@@ -16,7 +18,10 @@ services:
       - redis
   redis: # Don't change anything in this section unless you know what you're doing
     image: redis:latest
-    ports:
-      - "127.0.0.1:6379:6379"
+    networks:
+      - containerNetwork
     volumes:
       - ./redis-data:/data
+networks:
+  containerNetwork:
+    driver: bridge
