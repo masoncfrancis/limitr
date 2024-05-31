@@ -28,3 +28,4 @@ go.work.sum
 
 /redis-data
 /ssl
+/out
