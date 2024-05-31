@@ -16,7 +16,7 @@ You can set the following environment variables to configure the rate limiter:
 - `PORT` (default: `7654`): The port the server will listen on
 - `REDIS_ADDR` (default: `localhost:6379`): The address where the Redis server is running
 - `REDIS_PASSWORD` (default: `""`): The password of the Redis server
-- STILL TODO: `REDIS_DB` (default: `0`): The database of the Redis server
+- `REDIS_DB` (default: `0`): The database of the Redis server
 - `USE_TLS` (default: `false`): Whether to use TLS
 
 You can store these variables in a `.env` file in the root of the project. If there is no `.env` file, the server will 
