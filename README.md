@@ -36,7 +36,7 @@ requests.
 You can set the following environment variables to configure the rate limiter:
 
 - `FORWARD_URL` (**required**): The URL to forward requests to
-- `RATE_LIMIT` (**required**): The number of requests allowed per minute
+- `RATE_LIMIT` (**required**): The number of requests allowed per time window
 - `TIME_WINDOW` (**required**): The time window in seconds
 - `PORT` (**optional**, default: `7654`): The port the server will listen on
 - `USE_TLS` (**optional**, default: `false`): Whether to use TLS
