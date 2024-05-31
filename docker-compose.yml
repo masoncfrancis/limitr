@@ -11,12 +11,12 @@ services:
       - FORWARD_URL=https://www.beehive.net
       - RATE_LIMIT=50
       - TIME_WINDOW=120
-      - REDIS_ADDR=redis:6379 # Don't change this
+      - REDIS_ADDR=redis:6379 # Don't change this unless you know what you're doing
     depends_on:
       - redis
-  redis: # Don't change anything in this section
+  redis: # Don't change anything in this section unless you know what you're doing
     image: redis:latest
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
     volumes:
       - ./redis-data:/data
