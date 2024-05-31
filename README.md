@@ -21,6 +21,12 @@ liking.
 - [Redis](https://redis.io/): The rate limiter uses Redis to store rate limit data
 - [Docker](https://www.docker.com/): The server can be run in a Docker container
 
+#### Why Go and Why Redis?
+
+I chose Go primarily for its speed. Since the server is a rate limiter, it needs to be able to handle requests quickly.
+I chose Redis for the same reason. Redis is an in-memory database that is very fast and can handle a large number of
+requests.
+
 ## Getting Started
 
 ### Prerequisites
