@@ -38,11 +38,11 @@ You can set the following environment variables to configure the rate limiter:
 - `FORWARD_URL` (**required**): The URL to forward requests to
 - `RATE_LIMIT` (**required**): The number of requests allowed per minute
 - `TIME_WINDOW` (**required**): The time window in seconds
-- `PORT` (default: `7654`): The port the server will listen on
-- `USE_TLS` (default: `false`): Whether to use TLS
-- `REDIS_ADDR` (default: `localhost:6379`): The address where the Redis server is running
-- `REDIS_PASSWORD` (default: `""`): The password of the Redis server
-- `REDIS_DB` (default: `0`): The database of the Redis server
+- `PORT` (**optional**, default: `7654`): The port the server will listen on
+- `USE_TLS` (**optional**, default: `false`): Whether to use TLS
+- `REDIS_ADDR` (**optional**, default: `localhost:6379`): The address where the Redis server is running
+- `REDIS_PASSWORD` (**optional**, default: `""`): The password of the Redis server
+- `REDIS_DB` (**optional**, default: `0`): The database of the Redis server
 
 You can store these variables in a `.env` file in the same directory as the executable. If there is no `.env` file, the
 server will check to see if the variables are otherwise set. Variables stored in .env will take precedence over those
