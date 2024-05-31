@@ -73,7 +73,7 @@ This will start the Limitr server and a Redis server. The server will be availab
 
 #### Using the executable
 
-Releases are available on the [releases page](releases). Download the appropriate release for your system and run the
+Releases are available on the [releases page](https://github.com/BeehiveBroadband/limitr/releases). Download the appropriate release for your system and run the
 executable.
 
 ```shell
