@@ -80,6 +80,8 @@ executable.
 ./[executable name]
 ```
 
+**Note:** You may need to make the downloaded file executable by running `chmod +x [file name]` on UNIX-like systems.
+
 The server will be available at `http://localhost:7654` unless you set a different port.
 
 #### Building from source (unstable)
