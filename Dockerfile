@@ -1,3 +1,7 @@
+# This Dockerfile works by first building the application in a container with the Golang image, and then copying the
+# binary to a smaller image for running the application. The final image is based on the alpine image, which is a very
+# small Linux distribution. The point of doing this is to make the final image as small as possible.
+
 # Use the official Golang image as the base image for building
 FROM golang:1.22.3-alpine3.20 AS builder
 
