@@ -92,8 +92,7 @@ The server will be available at `http://localhost:7654` unless you set a differe
 
 #### Building from source (unstable)
 
-You can build from source if a release isn't available for your system. Please note that you will need to have Go >
-=1.22.3
+You can build from source if a release isn't available for your system. Please note that you will need to have Go >= 1.22.3
 installed on your system.
 
 First, clone the repository:
