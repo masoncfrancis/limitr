@@ -138,7 +138,7 @@ const version = "20240531"
 func main() {
 
 	// Print the version
-	fmt.Printf("Limitr %s\n", version)
+	fmt.Printf("Limitr (version %s)\n", version)
 
 	// Check for -v flag for version
 	if len(os.Args) > 1 && os.Args[1] == "-v" {
