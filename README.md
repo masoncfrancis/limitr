@@ -62,12 +62,7 @@ you will need to set up a Redis server yourself. Make sure to set your environme
 
 #### Using Docker Compose
 
-First, clone the repository:
-
-```shell
-git clone https://github.com/BeehiveBroadband/limitr.git
-cd limitr
-```
+First, download and unzip the source code for the latest release [here](https://github.com/BeehiveBroadband/limitr/releases):
 
 To run the server using Docker Compose, you can use the following command:
 
@@ -76,6 +71,8 @@ docker-compose up
 ```
 
 This will start the Limitr server and a Redis server. The server will be available at `http://localhost:7654`.
+
+**Note:** If you upgrade to a new release, you may need to delete the old limitr image from your Docker environment before running `docker compose up`. 
 
 #### Using the executable
 
