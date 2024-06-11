@@ -1,18 +1,18 @@
 # Limitr
 
-A HTTP/HTTPS request rate limiter written in Go. 
+A HTTP/HTTPS request rate limiter written in Go.
 
 ## About Limitr
 
-Limitr works by forwarding requests to a specified URL and moderating the rate at which requests can be made in accordance
-with a defined number of requests per defined time window. If the rate limit is exceeded, the server will respond with a 
-`429 Too Many Requests` status code.
+Limitr works by forwarding requests to a specified URL and moderating the rate at which requests can be made in
+accordance with a defined number of requests per defined time window. If the rate limit is exceeded, the server will 
+respond with a `429 Too Many Requests` status code.
 
 ### Why did I write Limitr?
 
-I had a need for rate limiting a self-hosted API that I was developing, and couldn't find any standalone rate limiters that
-weren't part of some API gateway or reverse proxy. I wanted something that I could run on my server and configure to my
-liking. 
+I had a need for rate limiting a self-hosted API that I was developing, and couldn't find any standalone rate limiters
+that weren't part of some API gateway or reverse proxy. I wanted something that I could run on my server and configure 
+to my liking.
 
 ### Technologies used
 
@@ -58,13 +58,22 @@ The `docker-compose.yml` file in the root of the project contains a Redis servic
 you will need to set up a Redis server yourself. Make sure to set your environment variables appropriately (see the
 [environment variables](#environment-variables) section).
 
+#### Some Quick Info
+
+The master branch contains the latest stable release. Active development is done in the dev branch.
+
 ### Running Limitr
 
 #### Using Docker Compose
 
-First, download and unzip the source code for the latest release [here](https://github.com/BeehiveBroadband/limitr/releases):
+First, clone this repository:
 
-To run the server using Docker Compose, you can use the following command from within the project root:
+```shell
+git clone https://github.com/BeehiveBroadband/limitr.git
+cd limitr
+```
+
+To run the server using Docker Compose, you can use the following command from within the project directory root:
 
 ```shell
 docker-compose up
@@ -72,12 +81,13 @@ docker-compose up
 
 This will start the Limitr server and a Redis server. The server will be available at `http://localhost:7654`.
 
-**Note:** If you upgrade to a new release, you may need to delete the old limitr image from your Docker environment before running `docker compose up`. 
+**Note:** If you upgrade to a new release, you may need to delete the old limitr image from your Docker environment
+before running `docker compose up`.
 
 #### Using the executable
 
-You can download the executable on the [releases page](https://github.com/BeehiveBroadband/limitr/releases). Download the appropriate release for your system and run the
-executable.
+You can download the executable on the [releases page](https://github.com/BeehiveBroadband/limitr/releases). Download
+the appropriate release for your system and run the executable.
 
 ```shell
 ./[executable name]
@@ -95,16 +105,39 @@ You can check the version of the executable by running the following command:
 ./[executable name] -v
 ```
 
-#### Building from source (unstable)
+#### Building from source
 
-You can build from source if a release isn't available for your system. Please note that you will need to have Go >= 1.22.3
-installed on your system.
+You can build from source if a release isn't available for your system. Please note that you will need to have Go >=
+1.22.3 installed on your system.
 
 First, clone the repository:
 
 ```shell
 git clone https://github.com/BeehiveBroadband/limitr.git
 cd limitr
+```
+
+Then, build the executable:
+
+```shell
+go build ./cmd/limitr
+```
+
+Finally, run the executable:
+
+```shell
+./limitr
+```
+
+The server will be available at `http://localhost:7654` unless you set a different port.
+
+#### Building from the `dev` branch (unstable)
+
+If you want to build from the dev branch to get the latest features, you can do so. Please note that the dev branch may
+contain unstable code. You will need to have Go >= 1.22.3 installed on your system to build from source.
+
+```shell
+git checkout dev
 ```
 
 Then, build the executable:
