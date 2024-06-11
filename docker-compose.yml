@@ -1,19 +1,21 @@
 services:
   limitr:
-    build:
+    build: # Don't change anything in this section unless you know what you're doing
       context: .
       dockerfile: Dockerfile
     ports:
-      - "7654:7654" # Make sure this is the same port as the one in your application, and make sure to add the port to the environment variable below
-    networks:
+      - "7654:7654" # Only change this on the left side if you want a different port
+    networks: # Don't change anything in this section unless you know what you're doing
       - containerNetwork
     volumes:
       - ./ssl:/ssl # Replace the left side with the path to your SSL certificates
-    environment: # Define the environment variables, available in the docs
-      - FORWARD_URL=https://www.beehive.net
-      - RATE_LIMIT=50
-      - TIME_WINDOW=120
+    environment: # Here you can define the environment variables, details available in the README
+      - FORWARD_URL=https://www.beehive.net # The URL to forward the requests to
+      - RATE_LIMIT=50 # Requests allowed per time window
+      - TIME_WINDOW=120 # Time window in seconds
       - REDIS_ADDR=redis:6379 # Don't change this unless you know what you're doing
+      # - USE_TLS=true # Uncomment this line if you want to use TLS and have SSL certificates (both .key and .pem files) in the folder on the left side of the colon (:) under 'volumes'
+      # Instead of using the environment variable, change the left side above under 'ports' if you want to use a different port
     depends_on:
       - redis
   redis: # Don't change anything in this section unless you know what you're doing
@@ -22,6 +24,6 @@ services:
       - containerNetwork
     volumes:
       - ./redis-data:/data
-networks:
+networks: # Don't change anything in this section unless you know what you're doing
   containerNetwork:
     driver: bridge
