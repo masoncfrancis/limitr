@@ -50,10 +50,10 @@ for platform in "${platforms[@]}"; do
         output_name+='.exe'
     fi
 
-    echo "Building for $os $arch..."
-
-    # Set the environment variables and build the project
-    GOOS="$os" GOARCH="$arch" go build -o "$output_name" "$SOURCE_DIR"
+    # Set the environment variables for the platform to build for
+    GOOS="$os" GOARCH="$arch"
+    # build the project
+    gum spin --title "Building for $os $arch..." --spinner minidot -- go build -o "$output_name" "$SOURCE_DIR"
 
     if [ $? -ne 0 ]; then
         echo "An error occurred while building for $os $arch"
