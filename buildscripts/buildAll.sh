@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Check if gum is installed
+if ! command -v gum &> /dev/null; then
+    echo "This script uses Gum to make things look nice."
+    echo "Gum is not installed. Please install Gum before running this script."
+    echo "You can find installation instructions for Gum at https://github.com/charmbracelet/gum?tab=readme-ov-file#installation"
+    exit 1
+fi
+
 # Check if the version argument is provided
 if [ -z "$1" ]; then
     echo "Usage: $0 <version>"
@@ -20,7 +28,12 @@ platforms=(
     "darwin amd64"
     "darwin arm64"
     "windows amd64"
+    "windows arm64"
 )
+
+platforms_string=$(printf "\n %s" "${platforms[@]}")
+
+gum confirm "We will now build limitr for the following platforms:$platforms_string" --affirmative="Continue" --negative="Exit" || { echo "Build cancelled"; exit 1; }
 
 # Create the output directory if it doesn't exist
 mkdir -p "$OUTPUT_DIR"
