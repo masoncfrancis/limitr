@@ -115,7 +115,7 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 
 	if config.GetUseTls() {
 		// Start the server with TLS
-		fmt.Printf("Server running on port %s with TLS...", config.GetPort())
+		fmt.Printf("Limitr server running on port %s with TLS...", config.GetPort())
 		err := app.ListenTLS(":"+config.GetPort(), "./ssl/cert.pem", "./ssl/cert.key")
 		if err != nil {
 			log.Fatalf("Error starting server: %v", err)
@@ -123,7 +123,7 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 		return
 	} else {
 		// Start the server without TLS
-		fmt.Printf("Server running on port %s without TLS...", config.GetPort())
+		fmt.Printf("Limitr server running on port %s without TLS...", config.GetPort())
 		err := app.Listen(":" + config.GetPort())
 		if err != nil {
 			log.Fatalf("Error starting server: %v", err)
