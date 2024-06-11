@@ -64,7 +64,7 @@ you will need to set up a Redis server yourself. Make sure to set your environme
 
 First, download and unzip the source code for the latest release [here](https://github.com/BeehiveBroadband/limitr/releases):
 
-To run the server using Docker Compose, you can use the following command:
+To run the server using Docker Compose, you can use the following command from within the project root:
 
 ```shell
 docker-compose up
