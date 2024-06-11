@@ -12,6 +12,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 )
 
 // makeRequest makes an HTTP request to the specified URL with the specified method, body, and headers
@@ -131,10 +132,18 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 	}
 }
 
+const version = "20240531"
+
 // main is the entry point for the application
 func main() {
 
-	// TODO add descriptions for all functions
+	// Print the version
+	fmt.Printf("Limitr %s\n", version)
+
+	// Check for -v flag for version
+	if len(os.Args) > 1 && os.Args[1] == "-v" {
+		os.Exit(0)
+	}
 
 	config.SetupEnvVars() // Load environment variables
 
