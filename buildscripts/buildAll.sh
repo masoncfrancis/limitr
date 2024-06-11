@@ -31,7 +31,7 @@ platforms=(
     "windows arm64"
 )
 
-platforms_string=$(printf "\n %s" "${platforms[@]}")
+platforms_string=$(printf "\n - %s" "${platforms[@]}")
 
 gum confirm "We will now build limitr for the following platforms:$platforms_string" --affirmative="Continue" --negative="Exit" || { echo "Build cancelled"; exit 1; }
 
