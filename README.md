@@ -60,7 +60,7 @@ you will need to set up a Redis server yourself. Make sure to set your environme
 
 #### Some Quick Info
 
-The master branch contains the latest stable release. Active development is done in the dev branch.
+The `master` branch contains the latest stable release. Active development is done in the `dev` branch.
 
 ### Running Limitr
 
