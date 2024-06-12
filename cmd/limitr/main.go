@@ -132,7 +132,7 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 	}
 }
 
-const version = "20240531"
+const version = "20240612"
 
 // main is the entry point for the application
 func main() {
