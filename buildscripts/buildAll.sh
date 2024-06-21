@@ -51,7 +51,8 @@ for platform in "${platforms[@]}"; do
     fi
 
     # Set the environment variables for the platform to build for
-    GOOS="$os" GOARCH="$arch"
+    export GOOS="$os"
+    export GOARCH="$arch"
     # build the project
     gum spin --title "Building for $os $arch..." --spinner minidot -- go build -o "$output_name" "$SOURCE_DIR"
 
