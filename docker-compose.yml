@@ -9,6 +9,7 @@ services:
       - containerNetwork
     volumes:
       - ./ssl:/ssl # Replace ONLY the left side with the path to your SSL certificates
+    restart: unless-stopped
     environment: # HERE you can define the environment variables, details available in the README
       - FORWARD_URL=https://www.beehive.net # The URL to forward the requests to
       - RATE_LIMIT=50 # Requests allowed per time window
@@ -22,6 +23,7 @@ services:
     image: redis:latest
     networks:
       - containerNetwork
+    restart: unless-stopped
     volumes:
       - ./redis-data:/data
 networks: # Don't change anything in this section unless you know what you're doing
