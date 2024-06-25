@@ -134,6 +134,18 @@ func SetupEnvVars() {
 		fmt.Println("VERBOSE_MODE is set to " + os.Getenv("VERBOSE_MODE"))
 	}
 
+	if !CheckEnvVar("IP_IN_HEADER") {
+		fmt.Println("IP_IN_HEADER is not set, using default (false)")
+		err := os.Setenv("IP_IN_HEADER", "false")
+		if err != nil {
+			fmt.Println("Error setting default value for IP_IN_HEADER")
+		}
+	}
+
+	if CheckEnvVar("IP_IN_HEADER") {
+		fmt.Println("IP_IN_HEADER is set to " + os.Getenv("IP_IN_HEADER"))
+	}
+
 }
 
 func CheckEnvVar(varName string) bool {
@@ -202,4 +214,12 @@ func GetVerboseMode() bool {
 		fmt.Println("Error converting VERBOSE_MODE to boolean")
 	}
 	return verboseMode
+}
+
+func GetIpInHeader() bool {
+	ipInHeader, err := strconv.ParseBool(os.Getenv("IP_IN_HEADER"))
+	if err != nil {
+		fmt.Println("Error converting IP_IN_HEADER to boolean")
+	}
+	return ipInHeader
 }
