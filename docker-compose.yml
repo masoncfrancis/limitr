@@ -15,7 +15,7 @@ services:
       - RATE_LIMIT=50 # Requests allowed per time window
       - TIME_WINDOW=120 # Time window in seconds
       - REDIS_ADDR=redis:6379 # Don't change this unless you know what you're doing
-      - IP_IN_HEADER=true # Don't change this unless you know what you're doing
+      - IP_IN_HEADER=false # Don't change this unless you know what you're doing
       - VERBOSE_MODE=false # Set this to true if you want to see the logs in the console
       # - USE_TLS=true # Uncomment this line if you want to use TLS and have SSL certificates (both .key and .pem files). Make sure to set the correct path to the containing folder in the 'volumes' section above
       # For setting the host PORT, instead of using the environment variable please change the left side above under 'ports'
