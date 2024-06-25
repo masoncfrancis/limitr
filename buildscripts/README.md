@@ -20,7 +20,7 @@ at [https://github.com/charmbracelet/gum?tab=readme-ov-file#installxation](https
 
 ## Usage
 
-To build Limitr for the above platofrms, run the following command (where `[version]` is the version number you're building):
+To build Limitr for the above platforms, run the following command (where `[version]` is the version number you're building):
 
 ```shell
 ./buildAll.sh [version]

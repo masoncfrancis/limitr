@@ -7,6 +7,7 @@ import (
 	"github.com/BeehiveBroadband/limitr/internal/config"
 	"github.com/BeehiveBroadband/limitr/internal/database"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/redis/go-redis/v9"
 	"github.com/valyala/fasthttp"
 	"io"
@@ -76,11 +77,24 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 	// Create a new Fiber instance
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
-		AppName:               "limit",
+		AppName:               "limitr",
 	})
+
+	// Set up a logger middleware
+	app.Use(logger.New())
 
 	// Set up a route to handle incoming requests
 	app.All("/*", func(c *fiber.Ctx) error {
+
+		if config.CheckEnvVar("VERBOSE_MODE") { // Check if verbose mode is enabled
+			if config.GetVerboseMode() {
+				app.Use(logger.New(logger.Config{
+					Format:     "${ip} - ${status} - ${method} ${path} - ${latency}\n",
+					TimeFormat: "02-Jan-2006 15:04:05",
+					TimeZone:   "America/Denver",
+				}))
+			}
+		}
 
 		// Check IP address for previous requests
 		ip := c.IP()
@@ -115,7 +129,7 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 
 	if config.GetUseTls() {
 		// Start the server with TLS
-		fmt.Printf("Limitr server running on port %s with TLS...", config.GetPort())
+		fmt.Printf("Limitr server running on port %s with TLS...\n", config.GetPort())
 		err := app.ListenTLS(":"+config.GetPort(), "./ssl/cert.pem", "./ssl/cert.key")
 		if err != nil {
 			log.Fatalf("Error starting server: %v", err)
@@ -123,7 +137,7 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 		return
 	} else {
 		// Start the server without TLS
-		fmt.Printf("Limitr server running on port %s without TLS...", config.GetPort())
+		fmt.Printf("Limitr server running on port %s without TLS...\n", config.GetPort())
 		err := app.Listen(":" + config.GetPort())
 		if err != nil {
 			log.Fatalf("Error starting server: %v", err)
