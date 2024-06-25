@@ -80,33 +80,32 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 		AppName:               "limitr",
 	})
 
-	// Set up a logger middleware
-	app.Use(logger.New())
+	if config.CheckEnvVar("VERBOSE_MODE") { // Check if verbose mode is enabled
+		if config.GetVerboseMode() {
+			app.Use(logger.New(logger.Config{
+				Format:     "${ip} - ${status} - ${method} ${path} - ${latency}\n",
+				TimeFormat: "02-Jan-2006 15:04:05",
+				TimeZone:   "America/Denver",
+			}))
+		}
+	}
 
 	// Set up a route to handle incoming requests
 	app.All("/*", func(c *fiber.Ctx) error {
-		ipAddr := c.IP()
+
+		ip := c.IP()
 
 		// Check if IP address was included in header key "X-Real-IP"
 		if config.GetIpInHeader() {
 			if c.Get("X-Real-IP") != "" {
-				ipAddr = c.Get("X-Real-IP")
-			}
-		}
-
-		if config.CheckEnvVar("VERBOSE_MODE") { // Check if verbose mode is enabled
-			if config.GetVerboseMode() {
-				app.Use(logger.New(logger.Config{
-					Format:     "${ipAddr} - ${status} - ${method} ${path} - ${latency}\n",
-					TimeFormat: "02-Jan-2006 15:04:05",
-					TimeZone:   "America/Denver",
-				}))
+				ip = c.Get("X-Real-IP")
+				fmt.Println("IP address in header: " + ip)
 			}
 		}
 
 		// Check IP address for previous requests
 
-		shouldRestrict, err := database.CheckIp(rdb, ipAddr, dbCtx, config.GetTimeWindow(), config.GetRateLimit())
+		shouldRestrict, err := database.CheckIp(rdb, ip, dbCtx, config.GetTimeWindow(), config.GetRateLimit())
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
