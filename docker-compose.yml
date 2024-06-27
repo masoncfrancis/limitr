@@ -5,8 +5,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "7654:7654" # Change this on ONLY the left side if you want to host on a different port
-    networks: # Don't change anything in this section unless you know what you're doing
-      - containerNetwork
+    network_mode: host
     volumes:
       - ./ssl:/ssl # Replace ONLY the left side with the path to your SSL certificates
     restart: unless-stopped
@@ -14,7 +13,7 @@ services:
       - FORWARD_URL=https://www.beehive.net # The URL to forward the requests to
       - RATE_LIMIT=50 # Requests allowed per time window
       - TIME_WINDOW=120 # Time window in seconds
-      - REDIS_ADDR=redis:6379 # Don't change this unless you know what you're doing
+      - REDIS_ADDR=localhost:6379 # Don't change this unless you know what you're doing
       - IP_IN_HEADER=false # Don't change this unless you know what you're doing
       - VERBOSE_MODE=false # Set this to true if you want to see the logs in the console
       # - USE_TLS=true # Uncomment this line if you want to use TLS and have SSL certificates (both .key and .pem files). Make sure to set the correct path to the containing folder in the 'volumes' section above
@@ -23,11 +22,7 @@ services:
       - redis
   redis: # Don't change anything in this section unless you know what you're doing
     image: redis:latest
-    networks:
-      - containerNetwork
+    network_mode: host
     restart: unless-stopped
     volumes:
       - ./redis-data:/data
-networks: # Don't change anything in this section unless you know what you're doing
-  containerNetwork:
-    driver: bridge
