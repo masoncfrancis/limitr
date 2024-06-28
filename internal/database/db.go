@@ -14,7 +14,7 @@ func CreateDbConn() (context.Context, *redis.Client) {
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     config.GetRedisAddr(),
 		Password: config.GetRedisPassword(),
-		DB:       0,
+		DB:       config.GetRedisDb(),
 	})
 
 	return dbCtx, rdb

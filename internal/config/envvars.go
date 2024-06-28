@@ -20,7 +20,7 @@ func SetupEnvVars() {
 	errorHappened := false
 
 	// If the environment variable is not set, print error message and quit
-	if !CheckEnvVar("PORT") {
+	if !IsEnvVarSet("PORT") {
 		fmt.Println("PORT is not set, using default (7654)")
 		err := os.Setenv("PORT", "7654")
 		if err != nil {
@@ -39,13 +39,13 @@ func SetupEnvVars() {
 			fmt.Println("PORT is set to " + os.Getenv("PORT"))
 		}
 	}
-	if !CheckEnvVar("FORWARD_URL") {
+	if !IsEnvVarSet("FORWARD_URL") {
 		fmt.Println("FORWARD_URL is not set and is required")
 		errorHappened = true
 	} else {
 		fmt.Println("FORWARD_URL is set to " + os.Getenv("FORWARD_URL"))
 	}
-	if !CheckEnvVar("RATE_LIMIT") {
+	if !IsEnvVarSet("RATE_LIMIT") {
 		fmt.Println("RATE_LIMIT is not set and is required")
 		errorHappened = true
 	} else {
@@ -60,7 +60,7 @@ func SetupEnvVars() {
 			fmt.Println("RATE_LIMIT is set to " + os.Getenv("RATE_LIMIT"))
 		}
 	}
-	if !CheckEnvVar("TIME_WINDOW") {
+	if !IsEnvVarSet("TIME_WINDOW") {
 		fmt.Println("TIME_WINDOW is not set and is required")
 		errorHappened = true
 	} else {
@@ -76,14 +76,14 @@ func SetupEnvVars() {
 		}
 
 	}
-	if !CheckEnvVar("REDIS_ADDR") {
+	if !IsEnvVarSet("REDIS_ADDR") {
 		fmt.Println("REDIS_ADDR is not set, using default (localhost:6379) ")
 		err := os.Setenv("REDIS_ADDR", "localhost:6379")
 		if err != nil {
 			fmt.Println("Error setting default value for REDIS_ADDR")
 		}
 	}
-	if !CheckEnvVar("REDIS_PASSWORD") {
+	if !IsEnvVarSet("REDIS_PASSWORD") {
 		fmt.Println("REDIS_PASSWORD is not set, using default (blank)")
 		err := os.Setenv("REDIS_PASSWORD", "")
 		if err != nil {
@@ -91,7 +91,7 @@ func SetupEnvVars() {
 		}
 	}
 
-	if !CheckEnvVar("REDIS_DB") {
+	if !IsEnvVarSet("REDIS_DB") {
 		fmt.Println("REDIS_DB is not set, using default (0)")
 		err := os.Setenv("REDIS_DB", "0")
 		if err != nil {
@@ -110,7 +110,7 @@ func SetupEnvVars() {
 		}
 	}
 
-	if !CheckEnvVar("USE_TLS") {
+	if !IsEnvVarSet("USE_TLS") {
 		fmt.Println("USE_TLS is not set, using default (false)")
 		err := os.Setenv("USE_TLS", "false")
 		if err != nil {
@@ -118,37 +118,36 @@ func SetupEnvVars() {
 		}
 	}
 
-	if errorHappened {
-		fmt.Println("Exiting due to missing or improperly set environment variables...")
-		os.Exit(1)
+	if !IsEnvVarSet("IP_HEADER_KEY") {
+		fmt.Println("IP_HEADER_KEY is not set, using default (blank)")
+		err := os.Setenv("IP_HEADER_KEY", "")
+		if err != nil {
+			fmt.Println("Error setting default value for IP_HEADER_KEY")
+		}
+	} else {
+		fmt.Println("IP_HEADER_KEY is set to " + os.Getenv("IP_HEADER_KEY"))
 	}
 
-	if !CheckEnvVar("VERBOSE_MODE") {
+	if !IsEnvVarSet("VERBOSE_MODE") {
 		fmt.Println("VERBOSE_MODE is not set, using default (false)")
 		err := os.Setenv("VERBOSE_MODE", "false")
 		if err != nil {
 			fmt.Println("Error setting default value for VERBOSE_MODE")
 		}
 	}
-	if CheckEnvVar("VERBOSE_MODE") {
+	if IsEnvVarSet("VERBOSE_MODE") {
 		fmt.Println("VERBOSE_MODE is set to " + os.Getenv("VERBOSE_MODE"))
 	}
 
-	if !CheckEnvVar("IP_IN_HEADER") {
-		fmt.Println("IP_IN_HEADER is not set, using default (false)")
-		err := os.Setenv("IP_IN_HEADER", "false")
-		if err != nil {
-			fmt.Println("Error setting default value for IP_IN_HEADER")
-		}
-	}
-
-	if CheckEnvVar("IP_IN_HEADER") {
-		fmt.Println("IP_IN_HEADER is set to " + os.Getenv("IP_IN_HEADER"))
+	// Exit if any errors occurred
+	if errorHappened {
+		fmt.Println("Exiting due to missing or improperly set environment variables...")
+		os.Exit(1)
 	}
 
 }
 
-func CheckEnvVar(varName string) bool {
+func IsEnvVarSet(varName string) bool {
 	_, exists := os.LookupEnv(varName)
 	if exists {
 		return true // Environment variable is set
@@ -208,18 +207,14 @@ func GetRedisDb() int {
 	return redisDb
 }
 
+func GetIpHeaderKey() string {
+	return os.Getenv("IP_HEADER_KEY")
+}
+
 func GetVerboseMode() bool {
 	verboseMode, err := strconv.ParseBool(os.Getenv("VERBOSE_MODE"))
 	if err != nil {
 		fmt.Println("Error converting VERBOSE_MODE to boolean")
 	}
 	return verboseMode
-}
-
-func GetIpInHeader() bool {
-	ipInHeader, err := strconv.ParseBool(os.Getenv("IP_IN_HEADER"))
-	if err != nil {
-		fmt.Println("Error converting IP_IN_HEADER to boolean")
-	}
-	return ipInHeader
 }

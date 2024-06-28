@@ -81,22 +81,22 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 	})
 
 	// Custom middleware to add X-Real-IP to locals
-	if config.GetIpInHeader() {
+	if config.GetIpHeaderKey() != "" {
 		app.Use(func(c *fiber.Ctx) error {
-			c.Locals("X-Real-IP", c.Get("X-Real-IP"))
+			c.Locals("IP", c.Get(config.GetIpHeaderKey()))
 			return c.Next()
 		})
 	} else {
 		app.Use(func(c *fiber.Ctx) error {
-			c.Locals("X-Real-IP", c.IP())
+			c.Locals("IP", c.IP())
 			return c.Next()
 		})
 	}
 
-	if config.CheckEnvVar("VERBOSE_MODE") { // Check if verbose mode is enabled
+	if config.IsEnvVarSet("VERBOSE_MODE") { // Check if verbose mode is enabled
 		if config.GetVerboseMode() {
 			app.Use(logger.New(logger.Config{
-				Format:     "${locals:X-Real-IP} - ${status} - ${method} ${path} - ${latency}\n",
+				Format:     "${locals:IP} - ${status} - ${method} ${path} - ${latency}\n",
 				TimeFormat: "02-Jan-2006 15:04:05",
 				TimeZone:   "America/Denver",
 			}))
@@ -108,15 +108,12 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 
 		ip := c.IP()
 
-		// Check if IP address was included in header key "X-Real-IP"
-		if config.GetIpInHeader() {
-			if c.Get("X-Real-IP") != "" {
-				ip = c.Get("X-Real-IP")
-			}
+		// Get IP address from header if env var set
+		if config.GetIpHeaderKey() != "" {
+			ip = c.Get(config.GetIpHeaderKey())
 		}
 
 		// Check IP address for previous requests
-
 		shouldRestrict, err := database.CheckIp(rdb, ip, dbCtx, config.GetTimeWindow(), config.GetRateLimit())
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
@@ -165,7 +162,7 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 	}
 }
 
-const version = "20240612"
+const version = "20240628"
 
 // main is the entry point for the application
 func main() {
