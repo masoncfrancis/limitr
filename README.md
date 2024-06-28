@@ -5,13 +5,13 @@ A HTTP/HTTPS request rate limiter written in Go.
 ## About Limitr
 
 Limitr works by forwarding requests to a specified URL and moderating the rate at which requests can be made in
-accordance with a defined number of requests per defined time window. If the rate limit is exceeded, the server will 
+accordance with a defined number of requests per defined time window. If the rate limit is exceeded, the server will
 respond with a `429 Too Many Requests` status code.
 
 ### Why did I write Limitr?
 
 I had a need for rate limiting a self-hosted API that I was developing, and couldn't find any standalone rate limiters
-that weren't part of some API gateway or reverse proxy. I wanted something that I could run on my server and configure 
+that weren't part of some API gateway or reverse proxy. I wanted something that I could run on my server and configure
 to my liking.
 
 ### Technologies used
@@ -40,8 +40,10 @@ You can set the following environment variables to configure the rate limiter:
 - `TIME_WINDOW` (**required**): The time window in seconds
 - `PORT` (**optional**, default: `7654`): The port the server will listen on
 - `USE_TLS` (**optional**, default: `false`): Whether to use TLS (certificates are required)
+- `IP_HEADER_KEY` (**optional**, default: blank): The header key that contains the client's IP address
 - `REDIS_ADDR` (**optional**, default: `localhost:6379`): The address where the Redis server is running
-- `REDIS_PASSWORD` (**optional**, default: `""`): The password of the Redis server
+- `REDIS_PASSWORD` (**optional**, default: `""`): The password of the Redis server. Please set a new password here and
+  in `redisconfig/redis.conf` if you are using Redis in a production environment
 - `REDIS_DB` (**optional**, default: `0`): The database of the Redis server
 - `VERBOSE_MODE` (**optional**, default: `false`): Whether to print incoming requests to the console
 

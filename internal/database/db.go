@@ -6,8 +6,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-// TODO implement ability to change redis port and password
-
+// CreateDbConn creates a new Redis client and returns the context and client
 func CreateDbConn() (context.Context, *redis.Client) {
 	dbCtx := context.Background()
 
