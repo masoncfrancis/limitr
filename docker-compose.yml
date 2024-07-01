@@ -24,6 +24,7 @@ services:
   redis: # Don't change anything in this section unless you know what you're doing
     image: redis:latest
     restart: unless-stopped
+    command: redis-server /usr/local/etc/redis/redis.conf
     networks:
       - containerNetwork
     volumes:
