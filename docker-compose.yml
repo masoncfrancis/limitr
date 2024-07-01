@@ -3,9 +3,10 @@ services:
     build: # Don't change anything in this section unless you know what you're doing
       context: .
       dockerfile: Dockerfile
-    network_mode: host
+    networks:
+      - containerNetwork
     ports:
-      - "7654:7654" # Change the left side to the port you want to expose the service on
+      - "127.0.0.1:7654:7654" # Change the left side to the port you want to expose the service on
     volumes:
       - ./ssl:/ssl # Replace ONLY the left side with the path to your SSL certificates
     restart: unless-stopped
@@ -14,7 +15,7 @@ services:
       - RATE_LIMIT=50 # Requests allowed per time window
       - TIME_WINDOW=120 # Time window in seconds
       - IP_HEADER_KEY=CF-Connecting-IP # The header key that contains the IP address. Comment out if IP should be read from connection normally
-      - REDIS_ADDR=localhost:6379 # Don't change this unless you know what you're doing
+      - REDIS_ADDR=redis:6379 # Don't change this unless you know what you're doing
       - REDIS_PASSWORD=ChangeMe! # The password for the Redis server. Set a new one here and in redisconfig/redis.conf if using in production
       - VERBOSE_MODE=false # Set this to true if you want to see the logs in the console
       # - USE_TLS=true # Uncomment this line if you want to use TLS and have SSL certificates (both .key and .pem files). Make sure to set the correct path to the containing folder in the 'volumes' section above
@@ -23,9 +24,11 @@ services:
   redis: # Don't change anything in this section unless you know what you're doing
     image: redis:latest
     restart: unless-stopped
-    command: redis-server /usr/local/etc/redis/redis.conf
-    ports:
-      - "127.0.0.1:6379:6379"
+    networks:
+      - containerNetwork
     volumes:
       - ./redis-data:/data
       - ./redisconfig/redis.conf:/usr/local/etc/redis/redis.conf
+networks:
+  containerNetwork:
+    driver: bridge
