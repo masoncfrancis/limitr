@@ -96,8 +96,8 @@ docker-compose up
 
 This will start the Limitr server and a Redis server. The server will be available at `http://localhost:7654`.
 
-**Note:** If you upgrade to a new release, you may need to delete the old limitr image from your Docker environment
-before running `docker compose up`.
+**Note:** If you upgrade to a new release, you may need to delete the old Limitr image from your Docker environment
+before running `docker compose up`. Alternatively, you can run `docker compose up --build` to rebuild the image.
 
 #### Using the executable
 
