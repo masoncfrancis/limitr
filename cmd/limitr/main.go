@@ -162,11 +162,7 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 	}
 }
 
-<<<<<<< Updated upstream
-const version = "20240628"
-=======
 const version = "20240702"
->>>>>>> Stashed changes
 
 // main is the entry point for the application
 func main() {
