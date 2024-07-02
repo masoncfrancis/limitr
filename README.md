@@ -65,9 +65,17 @@ you will need to set up a Redis server yourself. Make sure to set your environme
 
 The `master` branch contains the latest stable release. Active development is done in the `dev` branch.
 
-### Running Limitr
+### Running Limitr Normally
 
 #### Using Docker Compose
+
+**Note:** When running in Docker, Limitr cannot accurately get the client's IP address from the request. You will need
+to set the `IP_HEADER_KEY` environment variable to the header key that contains the client's IP address received from a
+reverse proxy, such as Nginx, HAProxy, cloudflared tunnels, etc.
+See [Running Limitr Behind a Reverse Proxy](#running-limitr-behind-a-reverse-proxy). Alternatively, you can run Limitr
+without Docker to get the client's IP address from the request, or you can
+change [docker-compose.yml](docker-compose.yml) to run the containers in host network mode (not recommended for security
+reasons).
 
 First, clone this repository:
 
@@ -139,6 +147,15 @@ The server will be available at `http://localhost:7654` unless you set a differe
 If you want to build from the dev branch to get the latest features, you can do so. Please note that the dev branch may
 contain unstable code. You will need to have Go >= 1.22.3 installed on your system to build from source.
 
+First, clone the repository:
+
+```shell
+git clone https://github.com/BeehiveBroadband/limitr.git
+cd limitr
+```
+
+Then, checkout the `dev` branch:
+
 ```shell
 git checkout dev
 ```
@@ -156,6 +173,18 @@ Finally, run the executable:
 ```
 
 The server will be available at `http://localhost:7654` unless you set a different port.
+
+### Running Limitr Behind a Reverse Proxy
+
+If you are running Limitr behind a reverse proxy you will need to set the `IP_HEADER_KEY` environment variable to the
+header key that contains the client's IP address. This is necessary because the server will not be able to get the
+client's IP address from the request in the standard way. Limitr applies rate limits to incoming requests based on the
+client IP. The reverse proxy will need to forward the client's IP address in a header. This is possible with many
+reverse
+proxies, such as Nginx, HAProxy, cloudflared tunnels, etc.
+
+Once you have set the `IP_HEADER_KEY` environment variable, you can run Limitr as described
+in [Running Limitr Normally](#running-limitr-normally).
 
 ## Licensing
 
