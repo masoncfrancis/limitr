@@ -30,15 +30,6 @@ services:
     volumes:
       - ./redis/data:/data
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
-  haproxy: # Don't change anything in this section unless you know what you're doing
-    image: haproxy:latest
-    network_mode: host
-    volumes:
-      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
-      - ./haproxy/log:/dev/log
-    restart: unless-stopped
-    depends_on:
-      - limitr
 networks:
   containerNetwork:
     driver: bridge
