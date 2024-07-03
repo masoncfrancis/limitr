@@ -14,6 +14,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 // makeRequest makes an HTTP request to the specified URL with the specified method, body, and headers
@@ -72,6 +73,11 @@ func convertHeader(fasthttpHeader *fasthttp.RequestHeader) http.Header {
 	return header
 }
 
+// splitCSV splits a CSV string into an array of strings
+func splitCSV(input string) []string {
+	return strings.Split(input, ",")
+}
+
 // setupAndRunServer sets up the Fiber server and starts it
 func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 	// Create a new Fiber instance
@@ -106,11 +112,18 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 	// Set up a route to handle incoming requests
 	app.All("/*", func(c *fiber.Ctx) error {
 
-		ip := c.IP()
+		ip := c.IP() // Get IP address from request
 
 		// Get IP address from header if env var set
 		if config.GetIpHeaderKey() != "" {
-			ip = c.Get(config.GetIpHeaderKey())
+			// Assuming the header contains a list of ip addresses, split into an array and get the first one
+			listString := c.Get(config.GetIpHeaderKey())
+			ip = splitCSV(listString)[0]
+
+			// If the header doesn't exist, use the IP address from the request
+			if listString == "" {
+				ip = c.IP()
+			}
 		}
 
 		// Check IP address for previous requests

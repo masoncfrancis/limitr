@@ -17,7 +17,7 @@ services:
       - IP_HEADER_KEY=X-Forwarded-For # The header key that contains the IP address. Comment out if IP should be read from connection normally
       - REDIS_ADDR=redis:6379 # Don't change this unless you know what you're doing
       - REDIS_PASSWORD=ChangeMe! # The password for the Redis server. Set a new one here and in redisconfig/redis.conf if using in production
-      - VERBOSE_MODE=false # Set this to true if you want to see the logs in the console
+      - VERBOSE_MODE=true # Set this to true if you want to see the logs in the console
       # - USE_TLS=true # Uncomment this line if you want to use TLS and have SSL certificates (both .key and .pem files). Make sure to set the correct path to the containing folder in the 'volumes' section above
     depends_on: # Don't change anything in this section unless you know what you're doing
       - redis
