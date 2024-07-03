@@ -24,8 +24,10 @@ go.work.sum
 /.idea
 /.vscode
 
+
+
 .env
 
-/redis-data
+/redis/data
 /ssl
 /out
