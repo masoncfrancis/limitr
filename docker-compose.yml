@@ -14,7 +14,7 @@ services:
       - FORWARD_URL=https://www.beehive.net # The URL to forward the requests to
       - RATE_LIMIT=50 # Requests allowed per time window
       - TIME_WINDOW=120 # Time window in seconds
-      - IP_HEADER_KEY=CF-Connecting-IP # The header key that contains the IP address. Comment out if IP should be read from connection normally
+      - IP_HEADER_KEY=X-Forwarded-For # The header key that contains the IP address. Comment out if IP should be read from connection normally
       - REDIS_ADDR=redis:6379 # Don't change this unless you know what you're doing
       - REDIS_PASSWORD=ChangeMe! # The password for the Redis server. Set a new one here and in redisconfig/redis.conf if using in production
       - VERBOSE_MODE=false # Set this to true if you want to see the logs in the console
@@ -28,8 +28,8 @@ services:
     networks:
       - containerNetwork
     volumes:
-      - ./redis-data:/data
-      - ./redisconfig/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis/data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
 networks:
   containerNetwork:
     driver: bridge
