@@ -2,7 +2,7 @@
 /.vscode
 /.idea
 .gitignore
-/redis
+/redis/data
 /haproxy
 /ssl
 /.git
