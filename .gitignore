@@ -31,3 +31,5 @@ go.work.sum
 *.rdb
 /ssl
 /out
+
+.DS_Store
