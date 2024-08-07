@@ -3,7 +3,7 @@
 # small Linux distribution. The point of doing this is to make the final image as small as possible.
 
 # Use the official Golang image as the base image for building
-FROM golang:latest AS builder
+FROM golang:alpine AS builder
 
 # Set the working directory inside the container
 WORKDIR /app
