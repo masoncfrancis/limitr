@@ -139,6 +139,31 @@ func SetupEnvVars() {
 		fmt.Println("VERBOSE_MODE is set to " + os.Getenv("VERBOSE_MODE"))
 	}
 
+	// Check if SYSLOG_ENABLED is set, if so check syslog host and port
+	if !IsEnvVarSet("SYSLOG_ENABLED") {
+		fmt.Println("SYSLOG_ENABLED is not set, using default (false)")
+		err := os.Setenv("SYSLOG_ENABLED", "false")
+		if err != nil {
+			fmt.Println("Error setting default value for SYSLOG_ENABLED")
+		}
+	} else {
+		fmt.Println("SYSLOG_ENABLED is set to " + os.Getenv("SYSLOG_ENABLED"))
+		if os.Getenv("SYSLOG_ENABLED") == "true" {
+			if !IsEnvVarSet("SYSLOG_HOST") {
+				fmt.Println("SYSLOG_HOST is not set, is required when SYSLOG_ENABLED is true")
+				errorHappened = true
+			} else {
+				fmt.Println("SYSLOG_HOST is set to " + os.Getenv("SYSLOG_HOST"))
+			}
+			if !IsEnvVarSet("SYSLOG_PORT") {
+				fmt.Println("SYSLOG_PORT is not set, is required when SYSLOG_ENABLED is true")
+				errorHappened = true
+			} else {
+				fmt.Println("SYSLOG_PORT is set to " + os.Getenv("SYSLOG_PORT"))
+			}
+		}
+	}
+
 	// Exit if any errors occurred
 	if errorHappened {
 		fmt.Println("Exiting due to missing or improperly set environment variables...")
