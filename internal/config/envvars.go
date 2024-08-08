@@ -243,3 +243,19 @@ func GetVerboseMode() bool {
 	}
 	return verboseMode
 }
+
+func GetSyslogEnabled() bool {
+	syslogEnabled, err := strconv.ParseBool(os.Getenv("SYSLOG_ENABLED"))
+	if err != nil {
+		fmt.Println("Error converting SYSLOG_ENABLED to boolean")
+	}
+	return syslogEnabled
+}
+
+func GetSyslogHost() string {
+	return os.Getenv("SYSLOG_HOST")
+}
+
+func GetSyslogPort() string {
+	return os.Getenv("SYSLOG_PORT")
+}
