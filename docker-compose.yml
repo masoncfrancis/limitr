@@ -1,13 +1,13 @@
 services:
   limitr:
-    image: beehivenetops/limitr
-    #    build: # Don't change anything in this section unless you know what you're doing
-    #      context: .
-    #      dockerfile: Dockerfile
+    image: limitr
+    build: # Don't change anything in this section unless you know what you're doing
+      context: .
+      dockerfile: Dockerfile
     networks:
       - containerNetwork
     ports:
-      - "127.0.0.1:7654:7654" # Change the left side to the port you want to expose the service on
+      - "7654:7654" # Change the left side to the port you want to expose the service on
     volumes:
       - ./ssl:/ssl # Replace ONLY the left side with the path to your SSL certificates
     restart: unless-stopped
@@ -16,10 +16,13 @@ services:
       - RATE_LIMIT=50 # Requests allowed per time window
       - TIME_WINDOW=120 # Time window in seconds
       - IP_HEADER_KEY=X-Forwarded-For # The header key that contains the IP address. Comment out if IP should be read from connection normally
+      #- USE_TLS=true # Uncomment this line if you want to use TLS and have SSL certificates (both .key and .pem files). Make sure to set the correct path to the containing folder in the 'volumes' section above
       - REDIS_ADDR=redis:6379 # Don't change this unless you know what you're doing
       - REDIS_PASSWORD=ChangeMe! # The password for the Redis server. Set a new one here and in redisconfig/redis.conf if using in production
-      - VERBOSE_MODE=false # Set this to true if you want to see the logs in the console
-      # - USE_TLS=true # Uncomment this line if you want to use TLS and have SSL certificates (both .key and .pem files). Make sure to set the correct path to the containing folder in the 'volumes' section above
+      - VERBOSE_MODE=false # Set this to true if you want to see logs in the console
+      - SYSLOG_ENABLED=false # Set this to true if you want to send logs to a syslog server
+      - SYSLOG_HOST=127.0.0.1 # The IP address of the syslog server
+      - SYSLOG_PORT=514 # The port of the syslog server
     depends_on: # Don't change anything in this section unless you know what you're doing
       - redis
   redis: # Don't change anything in this section unless you know what you're doing
