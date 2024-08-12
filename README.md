@@ -70,7 +70,14 @@ The `master` branch contains the latest stable release. Active development is do
 
 ### Running Limitr Normally
 
-#### Using Docker Compose
+#### Using Docker
+
+The easiest way to use Limitr in Docker is via Docker Compose. Limitr is also available in a docker image that you can
+obtain by running:
+
+```shell
+docker pull beehivenetops/limitr
+```
 
 **Note:** When running in Docker, Limitr cannot accurately get the client's IP address from the request. You will need
 to run the container behind a reverse proxy (such as Nginx, HAProxy, Cloudflare Tunnels, etc.) that can forward the
@@ -98,9 +105,6 @@ docker-compose up
 ```
 
 This will start the Limitr server and a Redis server. The server will be available at `http://localhost:7654`.
-
-**Note:** If you upgrade to a new release, you may need to delete the old Limitr image from your Docker environment
-before running `docker compose up`. Alternatively, you can run `docker compose up --build` to rebuild the image.
 
 #### Using the executable
 
