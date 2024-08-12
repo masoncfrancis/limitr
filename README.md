@@ -39,13 +39,16 @@ You can set the following environment variables to configure the rate limiter:
 - `RATE_LIMIT` (**required**): The number of requests allowed per time window
 - `TIME_WINDOW` (**required**): The time window in seconds
 - `PORT` (**optional**, default: `7654`): The port the server will listen on
-- `USE_TLS` (**optional**, default: `false`): Whether to use TLS (certificates are required)
+- `USE_TLS` (**optional**, default: `false`): If `true`, use TLS (certificates are required)
 - `IP_HEADER_KEY` (**optional**, default: blank): The header key that contains the client's IP address
 - `REDIS_ADDR` (**optional**, default: `localhost:6379`): The address where the Redis server is running
 - `REDIS_PASSWORD` (**optional**, default: `""`): The password of the Redis server. Please set a new password here and
   in `redisconfig/redis.conf` if you are using Redis in a production environment
 - `REDIS_DB` (**optional**, default: `0`): The database of the Redis server
-- `VERBOSE_MODE` (**optional**, default: `false`): Whether to print incoming requests to the console
+- `VERBOSE_MODE` (**optional**, default: `false`): If `true`, prints incoming requests to the console
+- `SYSLOG_ENABLED` (**optional**, default: `false`): If `true`, sends logs of incoming requests to a syslog server
+- `SYSLOG_HOST` (**required if `SYSLOG_ENABLED` is `true`**): The address of the syslog server
+- `SYSLOG_PORT` (**required if `SYSLOG_ENABLED` is `true`**): The port of the syslog server
 
 You can store these variables in a `.env` file in the same directory as the executable. If there is no `.env` file, the
 server will check to see if the variables are otherwise set. Variables stored in .env will take precedence over those
@@ -67,19 +70,9 @@ The `master` branch contains the latest stable release. Active development is do
 
 ### Running Limitr Normally
 
-#### Using Docker Compose
+#### Using Docker
 
-**Note:** When running in Docker, Limitr cannot accurately get the client's IP address from the request. You will need
-to run the container behind a reverse proxy (such as Nginx, HAProxy, Cloudflare Tunnels, etc.) that can forward the
-client IP address in a header. You will then need to set the `IP_HEADER_KEY` environment variable to the header key that
-contains the client's IP address. Alternatively, you can run Limitr without Docker, or you can
-modify [docker-compose.yml](docker-compose.yml) to run both containers in host network mode (only available on Linux
-hosts), both of which will allow you to get the client's IP address directly from the request. If you choose one of
-these options, please make sure to secure your Redis server accordingly.
-
-**Note:** The current Docker Compose configuration is set up to receive the client IP address from a header passed by
-Cloudflare Tunnels. If you are not using Cloudflare Tunnels, you will need to modify the `docker-compose.yml` file to
-suit your needs according to the note above.
+The easiest way to use Limitr in Docker is via Docker Compose.
 
 First, clone this repository:
 
@@ -96,8 +89,19 @@ docker-compose up
 
 This will start the Limitr server and a Redis server. The server will be available at `http://localhost:7654`.
 
-**Note:** If you upgrade to a new release, you may need to delete the old Limitr image from your Docker environment
-before running `docker compose up`. Alternatively, you can run `docker compose up --build` to rebuild the image.
+**Note:** When running in Docker, Limitr cannot accurately get the client's IP address from the request. You will need
+to run the container behind a reverse proxy (such as Nginx, HAProxy, Cloudflare Tunnels, etc.) that can forward the
+client IP address in a header. You will then need to set the `IP_HEADER_KEY` environment variable to the header key that
+contains the client's IP address. Alternatively, you can run Limitr without Docker, or you can
+modify [docker-compose.yml](docker-compose.yml) to run both containers in host network mode (only available on Linux
+hosts), both of which will allow you to get the client's IP address directly from the request. If you choose one of
+these options, please make sure to secure your Redis server accordingly.
+
+Limitr is also available in a docker image that you can obtain by running:
+
+```shell
+docker pull beehivenetops/limitr
+```
 
 #### Using the executable
 
