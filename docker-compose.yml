@@ -1,9 +1,6 @@
 services:
   limitr:
-    image: limitr
-    build: # Don't change anything in this section unless you know what you're doing
-      context: .
-      dockerfile: Dockerfile
+    image: beehivenetops/limitr
     networks:
       - containerNetwork
     ports:
