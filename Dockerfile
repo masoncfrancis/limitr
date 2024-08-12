@@ -15,7 +15,7 @@ COPY . .
 # Build the binary, with all the dependencies included
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o limitr ./cmd/limitr
 
-# Obtain the CA certificates from the alpine image
+# Obtain CA certificates using an alpine image
 FROM alpine:latest as certs
 RUN apk --update add ca-certificates
 
