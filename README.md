@@ -89,8 +89,6 @@ docker-compose up
 
 This will start the Limitr server and a Redis server. The server will be available at `http://localhost:7654`.
 
-Limitr is also available in a docker image that you can obtain by running:
-
 **Note:** When running in Docker, Limitr cannot accurately get the client's IP address from the request. You will need
 to run the container behind a reverse proxy (such as Nginx, HAProxy, Cloudflare Tunnels, etc.) that can forward the
 client IP address in a header. You will then need to set the `IP_HEADER_KEY` environment variable to the header key that
@@ -98,6 +96,8 @@ contains the client's IP address. Alternatively, you can run Limitr without Dock
 modify [docker-compose.yml](docker-compose.yml) to run both containers in host network mode (only available on Linux
 hosts), both of which will allow you to get the client's IP address directly from the request. If you choose one of
 these options, please make sure to secure your Redis server accordingly.
+
+Limitr is also available in a docker image that you can obtain by running:
 
 ```shell
 docker pull beehivenetops/limitr
