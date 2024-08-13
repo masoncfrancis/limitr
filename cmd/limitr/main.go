@@ -95,8 +95,6 @@ func sendSyslogMsg(msgText string) {
 	if err != nil {
 		log.Fatalf("Error sending syslog message: %v", err)
 	}
-
-	fmt.Println("Syslog message sent successfully.")
 }
 
 // convertHeader converts a fasthttp header to an http header
