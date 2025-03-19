@@ -187,7 +187,15 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 				return c.Status(fiber.StatusTooManyRequests).SendString("Too many requests")
 			}
 
-			body, statusCode, headers, err := makeRequest(c.Method(), config.GetForwardUrl()+c.Path(), c.Body(), convertHeader(&c.Request().Header))
+			// Query string args are in an array of strings, so we need to join them into a single string of key=value pairs
+			queryParams := c.Queries()
+			queryString := ""
+			for key, value := range queryParams {
+				queryString += fmt.Sprintf("%s=%s&", key, value)
+			}
+			queryString = strings.TrimSuffix(queryString, "&")
+
+			body, statusCode, headers, err := makeRequest(c.Method(), config.GetForwardUrl()+c.Path()+"?"+queryString, c.Body(), convertHeader(&c.Request().Header))
 			if err != nil {
 				return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 			}
