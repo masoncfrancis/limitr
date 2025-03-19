@@ -137,7 +137,7 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 	if config.IsEnvVarSet("VERBOSE_MODE") { // Check if verbose mode is enabled
 		if config.GetVerboseMode() {
 			app.Use(logger.New(logger.Config{
-				Format:     "${locals:IP} - ${status} - ${method} ${path} - ${latency}\n",
+				Format:     "${locals:IP} - ${status} - ${method} ${path} ${queryParams} - ${latency}\n",
 				TimeFormat: "02-Jan-2006 15:04:05",
 				TimeZone:   "America/Denver",
 			}))
