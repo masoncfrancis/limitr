@@ -14,6 +14,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 )
@@ -189,15 +190,15 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 
 			// Query string args are in an array of strings, so we need to join them into a single string of key=value pairs
 			queryParams := c.Queries()
-			queryString := ""
+			queryString := url.Values{}
 			for key, value := range queryParams {
-				queryString += fmt.Sprintf("%s=%s&", key, value)
+				queryString.Add(key, value)
 			}
-			queryString = strings.TrimSuffix(queryString, "&")
+			encodedQueryString := queryString.Encode()
 
 			url := config.GetForwardUrl() + c.Path()
 			if len(queryString) > 0 {
-				url += "?" + queryString
+				url += "?" + encodedQueryString
 			}
 			body, statusCode, headers, err := makeRequest(c.Method(), url, c.Body(), convertHeader(&c.Request().Header))
 			if err != nil {
