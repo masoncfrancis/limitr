@@ -19,7 +19,7 @@ import (
 	"strings"
 )
 
-const version = "20240812"
+const version = "20250325"
 
 // makeRequest makes an HTTP request to the specified URL with the specified method, body, and headers
 func makeRequest(method, url string, body []byte, headers http.Header) ([]byte, int, http.Header, error) {
