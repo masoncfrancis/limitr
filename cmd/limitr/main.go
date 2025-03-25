@@ -195,7 +195,11 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 			}
 			queryString = strings.TrimSuffix(queryString, "&")
 
-			body, statusCode, headers, err := makeRequest(c.Method(), config.GetForwardUrl()+c.Path()+"?"+queryString, c.Body(), convertHeader(&c.Request().Header))
+			url := config.GetForwardUrl() + c.Path()
+			if len(queryString) > 0 {
+				url += "?" + queryString
+			}
+			body, statusCode, headers, err := makeRequest(c.Method(), url, c.Body(), convertHeader(&c.Request().Header))
 			if err != nil {
 				return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 			}
