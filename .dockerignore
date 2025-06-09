@@ -7,3 +7,5 @@
 /ssl
 /.git
 /out
+docker-compose.yml
+/buildscripts
