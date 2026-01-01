@@ -120,6 +120,7 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
 		AppName:               "limitr",
+		ReadBufferSize:        16384, // 16KB buffer for request headers
 	})
 
 	// Custom middleware to add X-Real-IP to locals
