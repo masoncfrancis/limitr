@@ -26,7 +26,6 @@ jobs:
 
       - name: Build and Push Multi-Platform Image
         run: |
-          docker buildx create --use
           docker buildx build --platform ${{ env.PLATFORMS }} \
             --tag ${{ env.DOCKER_IMAGE }}:latest \
             --tag ${{ env.DOCKER_IMAGE }}:${{ github.event.release.tag_name }} \
