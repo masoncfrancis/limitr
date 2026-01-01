@@ -24,12 +24,6 @@ jobs:
           username: ${{ vars.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Set Docker tags
-        id: docker_meta
-        run: |
-          TAGS="${{ env.DOCKER_IMAGE }}:latest ${{ env.DOCKER_IMAGE }}:${{ github.event.release.tag_name }}"
-          echo "DOCKER_TAGS=$TAGS" >> $GITHUB_ENV
-
       - name: Build and Push Multi-Platform Image
         run: |
           docker buildx create --use
