@@ -166,6 +166,7 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 		// Check Redis connectivity
 		_, err := rdb.Ping(dbCtx).Result()
 		if err != nil {
+			fmt.Printf("Health check failed: Redis connection error: %v\n", err)
 			return c.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{
 				"status": "unhealthy",
 				"redis":  "disconnected",
