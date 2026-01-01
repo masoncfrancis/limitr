@@ -159,83 +159,100 @@ func setupAndRunServer(rdb *redis.Client, dbCtx context.Context) {
 				},
 			}))
 		}
+	}
 
-		// Set up a route to handle incoming requests
-		app.All("/*", func(c *fiber.Ctx) error {
-
-			ip := c.IP() // Get IP address from request
-
-			// Get IP address from header if env var set
-			if config.GetIpHeaderKey() != "" {
-				// Assuming the header contains a list of ip addresses, split into an array and get the first one
-				listString := c.Get(config.GetIpHeaderKey())
-				ip = splitCSV(listString)[0]
-
-				// If the header doesn't exist, use the IP address from the request
-				if listString == "" {
-					ip = c.IP()
-				}
-			}
-
-			// Check IP address for previous requests
-			shouldRestrict, err := database.CheckIp(rdb, ip, dbCtx, config.GetTimeWindow(), config.GetRateLimit())
-			if err != nil {
-				return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
-			}
-
-			// If the IP address has made more requests than allowed, return HTTP code 429
-			if shouldRestrict {
-				return c.Status(fiber.StatusTooManyRequests).SendString("Too many requests")
-			}
-
-			// Query string args are in an array of strings, so we need to join them into a single string of key=value pairs
-			queryParams := c.Queries()
-			queryString := url.Values{}
-			for key, value := range queryParams {
-				queryString.Add(key, value)
-			}
-			encodedQueryString := queryString.Encode()
-
-			url := config.GetForwardUrl() + c.Path()
-			if len(queryString) > 0 {
-				url += "?" + encodedQueryString
-			}
-			body, statusCode, headers, err := makeRequest(c.Method(), url, c.Body(), convertHeader(&c.Request().Header))
-			if err != nil {
-				return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
-			}
-
-			// Set response headers
-			for key, values := range headers {
-				for _, value := range values {
-					c.Set(key, value)
-				}
-			}
-
-			// Set response status code
-			c.Status(statusCode)
-
-			// Send response body
-			return c.Send(body)
-		})
-
-		if config.GetUseTls() {
-			// Start the server with TLS
-			fmt.Printf("Limitr server running on port %s with TLS...\n", config.GetPort())
-			err := app.ListenTLS(":"+config.GetPort(), "./ssl/cert.pem", "./ssl/cert.key")
-			if err != nil {
-				log.Fatalf("Error starting server: %v", err)
-			}
-			return
-		} else {
-			// Start the server without TLS
-			fmt.Printf("Limitr server running on port %s without TLS...\n", config.GetPort())
-			err := app.Listen(":" + config.GetPort())
-			if err != nil {
-				log.Fatalf("Error starting server: %v", err)
-			}
-			return
+	// Health check endpoint (not rate limited)
+	app.Get("/health", func(c *fiber.Ctx) error {
+		// Check Redis connectivity
+		_, err := rdb.Ping(dbCtx).Result()
+		if err != nil {
+			return c.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{
+				"status": "unhealthy",
+				"redis":  "disconnected",
+			})
 		}
+
+		return c.JSON(fiber.Map{
+			"status": "healthy",
+			"redis":  "connected",
+		})
+	})
+
+	// Set up a route to handle incoming requests
+	app.All("/*", func(c *fiber.Ctx) error {
+
+		ip := c.IP() // Get IP address from request
+
+		// Get IP address from header if env var set
+		if config.GetIpHeaderKey() != "" {
+			// Assuming the header contains a list of ip addresses, split into an array and get the first one
+			listString := c.Get(config.GetIpHeaderKey())
+			ip = splitCSV(listString)[0]
+
+			// If the header doesn't exist, use the IP address from the request
+			if listString == "" {
+				ip = c.IP()
+			}
+		}
+
+		// Check IP address for previous requests
+		shouldRestrict, err := database.CheckIp(rdb, ip, dbCtx, config.GetTimeWindow(), config.GetRateLimit())
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		}
+
+		// If the IP address has made more requests than allowed, return HTTP code 429
+		if shouldRestrict {
+			return c.Status(fiber.StatusTooManyRequests).SendString("Too many requests")
+		}
+
+		// Query string args are in an array of strings, so we need to join them into a single string of key=value pairs
+		queryParams := c.Queries()
+		queryString := url.Values{}
+		for key, value := range queryParams {
+			queryString.Add(key, value)
+		}
+		encodedQueryString := queryString.Encode()
+
+		url := config.GetForwardUrl() + c.Path()
+		if len(queryString) > 0 {
+			url += "?" + encodedQueryString
+		}
+		body, statusCode, headers, err := makeRequest(c.Method(), url, c.Body(), convertHeader(&c.Request().Header))
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		}
+
+		// Set response headers
+		for key, values := range headers {
+			for _, value := range values {
+				c.Set(key, value)
+			}
+		}
+
+		// Set response status code
+		c.Status(statusCode)
+
+		// Send response body
+		return c.Send(body)
+	})
+
+	if config.GetUseTls() {
+		// Start the server with TLS
+		fmt.Printf("Limitr server running on port %s with TLS...\n", config.GetPort())
+		err := app.ListenTLS(":"+config.GetPort(), "./ssl/cert.pem", "./ssl/cert.key")
+		if err != nil {
+			log.Fatalf("Error starting server: %v", err)
+		}
+		return
+	} else {
+		// Start the server without TLS
+		fmt.Printf("Limitr server running on port %s without TLS...\n", config.GetPort())
+		err := app.Listen(":" + config.GetPort())
+		if err != nil {
+			log.Fatalf("Error starting server: %v", err)
+		}
+		return
 	}
 }
 
